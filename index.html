@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بيانات الطلاب</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>بيانات الطلاب</h1>
+    <form id="login-form">
+      <input type="text" id="student-code" placeholder="أدخل كود الطالب" required>
+      <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+      <button type="submit">عرض البيانات</button>
+    </form>
+    <table id="students-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>كود الطالب</th>
+          <th>الاسم</th>
+          <th>الدرجة</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- سيتم ملء البيانات هنا -->
+      </tbody>
+    </table>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
