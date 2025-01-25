@@ -1,32 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بيانات الطلاب</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search by ID</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #444;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        // All Excel sheet data embedded as a JavaScript array
+        const data = [
+            { ID: 25001, name: "ابانوب اكرم غالى", one: 13, two: null },
+            { ID: 25002, name: "ابانوب عماد موسي", one: 21, two: null },
+            { ID: 25003, name: "اسطفانوس روماني عزمي", one: null, two: null },
+            { ID: 25004, name: "اندرو عبدالمسيح غطاس", one: 16, two: 10 },
+            { ID: 25005, name: "اندرو محروس مرزوق", one: null, two: null },
+            { ID: 25006, name: "ايريني اشرف جرجس كامل", one: 24, two: 14 },
+            { ID: 25007, name: "بولا روماني عزمي", one: null, two: null },
+            { ID: 25008, name: "بولس ممدوح فوزي", one: null, two: 10 },
+            { ID: 25009, name: "بيشوي جميل بدري", one: 17, two: 8 },
+            { ID: 25010, name: "توماس جرجس عزيز", one: 18, two: null },
+            { ID: 25011, name: "توماس هشام بدر", one: 17, two: null },
+            { ID: 25012, name: "جاسيكا هاني شحات", one: 20, two: null },
+            { ID: 25013, name: "جاكلين نبيل صبحي", one: 12, two: 11 },
+            { ID: 25014, name: "جرجس اسامة اسكندر", one: 18, two: null },
+            { ID: 25015, name: "جورج بيشوى صبحي", one: null, two: 11 },
+            { ID: 25016, name: "جورج توفيق نبيل", one: 16, two: null },
+            { ID: 25017, name: "جومانة ميلاد نبيل", one: null, two: null },
+            { ID: 25018, name: "جون جاد وهيب", one: 23, two: null },
+            { ID: 25019, name: "دميانة اسامة لويس سليم", one: null, two: null },
+            { ID: 25020, name: "دميانة عماد وصفى عوض", one: null, two: null },
+            { ID: 25021, name: "ساندرا عزمي عزت", one: 27, two: null },
+            { ID: 25022, name: "ساندرا فادي فتحي", one: 22, two: null },
+            { ID: 25023, name: "سلفيا سامح نبيل جورج", one: null, two: null },
+            { ID: 25024, name: "سمعان اشرف فريد", one: 20, two: null },
+            { ID: 25025, name: "سيلفيا سمير صبحي حنا", one: 16, two: null },
+            { ID: 25026, name: "سيلفيا عزمي عزت", one: 28, two: null },
+            { ID: 25027, name: "شيري فليمون ناجح", one: 25, two: null },
+            { ID: 25028, name: "فادي سمير سعيد", one: 28, two: null },
+            { ID: 25029, name: "فيرينا اميل جورجي", one: 27, two: null },
+            { ID: 25030, name: "فيرينا سامح يوحنا", one: 14, two: null },
+            { ID: 25031, name: "كاترين عماد ملاك", one: 25, two: null },
+            { ID: 25032, name: "كرستينا أشرف فهيم", one: 1, two: 12 },
+            { ID: 25033, name: "كيرلس عادل جاد", one: null, two: null },
+            { ID: 25034, name: "كيرلس ناصر راضي", one: 23, two: null },
+            { ID: 25035, name: "ماتيلدا ممدوح سامي", one: null, two: null },
+            { ID: 25036, name: "مارتينا نصري بخيت يسي", one: 22, two: null },
+            { ID: 25037, name: "مارتينا هانى فهمي", one: null, two: null },
+            { ID: 25038, name: "مارتينا وليد كامل", one: 16, two: null },
+            { ID: 25039, name: "ماريا بطرس ثابت", one: 27, two: 13 },
+            { ID: 25040, name: "ماريا مجدي بشري", one: null, two: null },
+            { ID: 25041, name: "ماريا ناجي وديع", one: 27, two: 11 },
+            { ID: 25042, name: "ماريان عادل عريان جيد", one: 26, two: null },
+            { ID: 25043, name: "مارينا سامح ملاك عطية", one: 24, two: 13 },
+            { ID: 25044, name: "مارينا سمير سليمان جرجس", one: null, two: null },
+            { ID: 25045, name: "مارينا صبري متري", one: 21, two: null },
+            { ID: 25046, name: "مارينا كمال فهمي", one: 20, two: 8 },
+            { ID: 25047, name: "مايكل جرجس وصفي", one: 22, two: null },
+            { ID: 25048, name: "مايكل كمال فهمي", one: 18, two: null },
+            { ID: 25049, name: "مريم عادل منير جرجس", one: 24, two: 13 },
+            { ID: 25050, name: "ملاك ميخائيل غطاس", one: 23, two: null },
+            { ID: 25051, name: "مهرائيل عادل منير", one: 20, two: 14 },
+            { ID: 25052, name: "ميرا موريس ناجح", one: 20, two: null },
+            { ID: 25053, name: "ميرام رامي صبحي صادق", one: 28, two: null },
+            { ID: 25054, name: "ميرنا مرقس أيوب", one: 20, two: null },
+            { ID: 25055, name: "ميرولا اشرف الفونس", one: 18, two: null },
+            { ID: 25056, name: "ميرولا حنا رشدي", one: 26, two: null },
+            { ID: 25057, name: "مينا رضا صالح", one: 9, two: null },
+            { ID: 25058, name: "مينا منير غطاس", one: 23, two: 13 },
+            { ID: 25059, name: "مينا وجيه عطية", one: null, two: null },
+            { ID: 25060, name: "نورهان راضي حكيم", one: 26, two: null },
+            { ID: 25061, name: "هناء فزيع فرج خليل", one: null, two: null },
+            { ID: 25062, name: "هيلانا جرجس ذكري", one: 24, two: null },
+            { ID: 25063, name: "يؤانا ايمن رشدي", one: 26, two: null },
+            { ID: 25064, name: "يؤانا سمير بدري", one: 23, two: null },
+            { ID: 25065, name: "مينا سمير لويز", one: null, two: null },
+            { ID: 25066, name: "يؤانا نسيم اسكندر", one: 27, two: 13 },
+            { ID: 25067, name: "يوأنا مجدي خليل زكي", one: 22, two: null },
+            { ID: 25068, name: "يوستينا سامح ابراهيم", one: 19, two: null },
+            { ID: 25069, name: "يوسف وسام ابراهيم", one: 23, two: 13 },
+            { ID: 25070, name: "يوسي سرور سعيد وهبة", one: 19, two: null },
+            { ID: 25071, name: "ابانوب جرجس عبدالكريم", one: 20, two: 11 },
+            { ID: 25072, name: "ابانوب عزمى", one: null, two: null },
+            { ID: 25073, name: "اندرو يوسف", one: null, two: null },
+            { ID: 25074, name: "انطونيوس سامح زكريا", one: 18, two: null },
+            { ID: 25075, name: "ايريني اشرف فهيم", one: 24, two: 8 },
+            { ID: 25076, name: "ايلاريا روماني شفيق", one: null, two: null },
+            { ID: 25077, name: "بطرس عجبان بطرس", one: 22, two: 9 },
+            { ID: 25078, name: "بيشوي رؤوف سمير كامل", one: 16, two: 3 },
+            { ID: 25079, name: "بيشوي عطا نجيب", one: 24, two: null },
+            { ID: 25080, name: "توماس حنا فتحي", one: 18, two: 7 },
+            { ID: 25081, name: "توماس عزت", one: 15, two: null },
+            { ID: 25082, name: "جرجس رأفت صبري فوزي", one: 27, two: 13 },
+            { ID: 25083, name: "جوليانا رأفت نجيب", one: null, two: null },
+            { ID: 25084, name: "داليا ممدوح فوزي فهيم", one: null, two: null },
+            { ID: 25085, name: "راندا عصام هرني", one: null, two: null },
+            { ID: 25086, name: "روفينا سامي وليم", one: null, two: null },
+            { ID: 25087, name: "ريهام رمزي فهمي", one: 19, two: null },
+            { ID: 25088, name: "ساندرا سامي", one: 22, two: null },
+            { ID: 25089, name: "ساندرا سمير صبحي", one: 20, two: null },
+            { ID: 25090, name: "ساندرا نصر فهمي", one: null, two: null },
+            { ID: 25091, name: "سوسنا ايهاب وصفى عزمي", one: 16, two: null },
+            { ID: 25092, name: "فيرونيا وليد كامل بقطر", one: 17, two: null },
+            { ID: 25093, name: "كاترين ايهاب ماهر زاخر", one: 24, two: null },
+            { ID: 25094, name: "كرستين وجدي ناشد", one: 24, two: null },
+            { ID: 25095, name: "كلارا رضا صالح بخيت", one: 27, two: 9 },
+            { ID: 25096, name: "كيرلس اشرف سمير", one: 19, two: 13 },
+            { ID: 25097, name: "كيرلس حازم ثابت", one: 24, two: 6 },
+            { ID: 25098, name: "كيرلس شنودة صبري", one: null, two: null },
+            { ID: 25099, name: "كيرلس ظريف صبحي", one: 25, two: 9 },
+            { ID: 25100, name: "مادونا فتحي زاهر", one: 20, two: 14 },
+            { ID: 25101, name: "مارتينا نصر زغلول", one: 16, two: null },
+            { ID: 25102, name: null, one: null, two: null },
+            { ID: 25103, name: "ماركو القمص انطون", one: null, two: 9 },
+            { ID: 25104, name: "ماريان ناثان بحر رزق", one: 19, two: null },
+            { ID: 25105, name: "مارينا اشرف فهيم", one: 18, two: null },
+            { ID: 25106, name: "مارينا رؤوف سمير كامل", one: null, two: null },
+            { ID: 25107, name: "ماريو ميلاد اسحاق", one: 21, two: null },
+            { ID: 25108, name: "مايكل سامي سمير", one: 18, two: null },
+            { ID: 25109, name: "مريام رأفت داود", one: 20, two: null },
+            { ID: 25110, name: "مريم اميل", one: 21, two: null },
+            { ID: 25111, name: "مريم مقار القس يعقوب موسي", one: 25, two: 11 },
+            { ID: 25112, name: "مريم يوسف ثابت", one: 20, two: 6 },
+            { ID: 25113, name: "ميرنا عماد عطية", one: 26, two: null },
+            { ID: 25114, name: "مينا يوسف وليم يوسف", one: 23, two: 12 },
+            { ID: 25115, name: "هايدي وليد عزت", one: 21, two: null },
+            { ID: 25116, name: "يؤانا عماد ملاك", one: 29, two: null },
+            { ID: 25117, name: "يوستينا عزت ابراهيم يوسف", one: 0, two: null },
+            { ID: 25118, name: "مايكل عماد رمزي", one: 21, two: 10 },
+            { ID: 25119, name: "فيولا سامح منصور نصر", one: null, two: null },
+            { ID: 25120, name: "جوفاني القس برسوم سامي", one: 22, two: null },
+            { ID: 25121, name: "ميرنا عاطف خليل", one: null, two: null },
+            { ID: 25122, name: "ماريز عاطف خلف وهبه", one: 24, two: 10 },
+            { ID: 25123, name: "رامي فرج مليكة", one: 21, two: 13 },
+            { ID: 25124, name: "ميرنا اسامة خيري", one: 18, two: null },
+            { ID: 25125, name: "يؤانا مدحت يسري", one: null, two: null },
+            { ID: 25126, name: "جومانا نادر سمير", one: 22, two: 10 },
+            { ID: 25127, name: "كيرلس حنا فوزي", one: 19, two: null },
+            { ID: 25128, name: "بيشوي ملاك فوزي", one: 25, two: null },
+            { ID: 25129, name: "هايدي امجد ونيس", one: 24, two: 11 },
+            { ID: 25130, name: "جورجيت نعيم", one: 21, two: null },
+            { ID: 25131, name: "روفينا يوسف", one: 26, two: 13 },
+            { ID: 25132, name: "كيرلس أشرف صبحي", one: null, two: null },
+            { ID: 25133, name: "اندرو امجد ونيس", one: 19, two: null },
+            { ID: 25134, name: "كيرلس غطاس", one: null, two: null }
+        ];
+
+        function searchById() {
+            const userId = document.getElementById("userId").value;
+            const result = data.find(row => row.ID == userId);
+
+            if (result) {
+                document.getElementById("result").innerHTML = `
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>الأسم</th>
+                            <th>طقس</th>
+                            <th>أنماط الشخصية</th>
+                        </tr>
+                        <tr>
+                            <td>${result.ID}</td>
+                            <td>${result.name}</td>
+                            <td>${result.one ?? 'N/A'}</td>
+                            <td>${result.two ?? 'N/A'}</td>
+                        </tr>
+                    </table>
+                `;
+            } else {
+                document.getElementById("result").innerHTML = "<p>ID not found.</p>";
+            }
+        }
+    </script>
 </head>
 <body>
-  <div class="container">
-    <h1>بيانات الطلاب</h1>
-    <form id="login-form">
-      <input type="text" id="student-code" placeholder="أدخل كود الطالب" required>
-      <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
-      <button type="submit">عرض البيانات</button>
-    </form>
-    <table id="students-table" style="display:none;">
-      <thead>
-        <tr>
-          <th>كود الطالب</th>
-          <th>الاسم</th>
-          <th>الدرجة</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- سيتم ملء البيانات هنا -->
-      </tbody>
-    </table>
-  </div>
-  <script src="app.js"></script>
+    <div class="container">
+        <h1>Search Data by ID</h1>
+        <input type="number" id="userId" placeholder="Enter ID" />
+        <button onclick="searchById()">Search</button>
+        <div id="result"></div>
+    </div>
 </body>
 </html>
