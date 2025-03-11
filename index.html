@@ -481,13 +481,34 @@
 
 
 ];
-        function searchStudent() {
+   function searchStudent() {
             let inputId = document.getElementById("studentId").value;
             let inputCode = document.getElementById("studentCode").value;
-            let student = students.find(s => s.id == inputId && s.code == inputCode);
+            let student;
+
+            if (inputCode === "OOOO") {
+                student = students.find(s => s.id == inputId);
+            } else {
+                student = students.find(s => s.id == inputId && s.code == inputCode);
+            }
 
             if (student) {
                 document.getElementById("studentName").innerText = "الطالب: " + student.name;
+                document.getElementById("studentStatus").innerText = "التذكية: " + student.status;
+
+                if (student.status !== "تمام" && inputCode !== "OOOO") {
+                    document.getElementById("statusMessage").innerText = "الرجاء سرعة تسليم التذكية للخدام لعرض النتيجة";
+                    document.getElementById("resultTable").style.display = "none";
+                    return;
+                }
+
+                // عرض النتيجة في كل الحالات عند إدخال "OOOO" أو إذا كانت الحالة "تمام"
+                document.getElementById("statusMessage").innerText = "";
+                document.getElementById("resultTable").style.display = "block";
+
+              
+
+                
                 let tableBody = document.getElementById("gradesTable");
                 tableBody.innerHTML = "";
 
@@ -496,6 +517,7 @@
                     { name: "تاريخ الكنيسة", score: student.score2, result: student.result2 },
                     { name: "أنماط الشخصية", score: student.score3, result: student.result3 }
                 ];
+
 
                 subjects.forEach(subject => {
                     let row = document.createElement("tr");
@@ -528,6 +550,7 @@
                 alert("لم يتم العثور على الطالب!");
             }
         }
+
     </script>
 
 </body>
