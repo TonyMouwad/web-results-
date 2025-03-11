@@ -24,7 +24,7 @@
             margin: auto;
             background: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -43,7 +43,7 @@
         input {
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 16px;
         }
 
@@ -52,7 +52,7 @@
             background: #007BFF;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             transition: 0.3s;
@@ -69,10 +69,18 @@
             margin-top: 20px;
         }
 
+        #studentStatus {
+            font-size: 18px;
+            color: #555;
+            margin-top: 10px;
+        }
+
         table {
             width: 100%;
             margin-top: 20px;
             border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         th, td {
@@ -86,69 +94,43 @@
             color: white;
         }
 
-        .weak-attendance { background-color: #ADD8E6; } /* أزرق فاتح */
-        .weak-exam { background-color: #D2B48C; } /* بني فاتح */
-        .fail { background-color: #FFB6C1; } /* أحمر فاتح */
-        .pass { background-color: white; } /* ناجح */
+        .weak-attendance { background-color: #ADD8E6; }
+        .weak-exam { background-color: #D2B48C; }
+        .fail { background-color: #f9ada3; }
+        .pass { background-color: #abf7bd; }
 
         @media (max-width: 600px) {
             .container {
                 width: 90%;
             }
-
             input, button {
                 font-size: 14px;
             }
-
             table {
                 font-size: 14px;
             }
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            text-align: center;
-            padding: 20px;
-        }
-        table {
-            width: 90%;
-            margin: auto;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #ddd;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <img src="habib gerges.jpg" alt="habib gerges">
-        <h1>نتيجة الترم الأول اعداد خدام</h1>
+        <img src="habib gerges.jpg" sizes="width=50%" style="width: 80%; height: 50%;">
+        <h4>++++++++++++++++++++++++++++++++++</h4><br>
+        <h2>نتيجة الترم الاول فصل اعداد خدام</h2>
+        <h4>++++++++++++++++++++++++++++++++++</h4>
+        <br>
+        <br>
 
         <div class="input-group">
-            <input type="number" id="studentId" placeholder="أدخل ID">
+            <input type="number" id="studentId" placeholder=" أدخل الـ ID">
             <input type="text" id="studentCode" placeholder="أدخل الكود">
             <button onclick="searchStudent()">بحث</button>
         </div>
 
         <h2 id="studentName"></h2>
+        <h3 id="studentStatus"></h3>
+        <p id="statusMessage" style="color: red; font-weight: bold;"></p>
 
         <table id="resultTable" style="display: none;">
             <thead>
@@ -163,227 +145,9 @@
     </div>
 
     <script>
-        /*let students = [
-        { id: 25001, name: "ابانوب اكرم غالى", code: "P1283", status: "تمام", score1: 19.52, result1: "راسب", score2: 15.34, result2: "راسب", score3: 10.03, result3: "راسب" },
-    { id: 25002, name: "ابانوب عماد موسي", code: "P4509", status: "تمام", score1: 35.69, result1: "ناجح", score2: 46.79, result2: "ناجح", score3: 33.64, result3: "تحريري ضعيف" },
-    { id: 25003, name: "اسطفانوس روماني عزمي", code: "P9082", status: "تمام", score1: 11.27, result1: "تحريري ضعيف", score2: 4.65, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25004, name: "اندرو عبدالمسيح غطاس", code: "P5193", status: "تمام", score1: 33.87, result1: "ناجح", score2: 43.34, result2: "ناجح", score3: 28.54, result3: "تحريري ضعيف" },
-    { id: 25005, name: "اندرو محروس مرزوق", code: "P6728", status: "تمام", score1: 18.41, result1: "تحريري ضعيف", score2: 16.92, result2: "راسب", score3: 7.37, result3: "راسب" },
-    { id: 25006, name: "ايريني اشرف جرجس كامل", code: "P4738", status: "تمام", score1: 52.43, result1: "ناجح", score2: 56.72, result2: "ناجح", score3: 27.62295, result3: "ناجح" },
-    { id: 25007, name: "بولا روماني عزمي", code: "P5786", status: "تمام", score1: 13.07, result1: "تحريري ضعيف", score2: 14.25, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25008, name: "بولس ممدوح فوزي", code: "P2409", status: "تمام", score1: 23.03, result1: "تحريري ضعيف", score2: 39.12, result2: "حضور ضعيف", score3: 23.42, result3: "راسب" },
-    { id: 25009, name: "بيشوي جميل بدري", code: "P3865", status: "تمام", score1: 38.22, result1: "ناجح", score2: 40.08, result2: "ناجح", score3: 27.54408, result3: "حضور ضعيف" },
-    { id: 25010, name: "توماس جرجس عزيز", code: "P1478", status: "تمام", score1: 34.64, result1: "ناجح", score2: 44.96, result2: "ناجح", score3: 27.51236, result3: "حضور ضعيف" },
-    { id: 25011, name: "توماس هشام بدر", code: "P3705", status: "تمام", score1: 43.16, result1: "ناجح", score2: 50.69, result2: "ناجح", score3: 13.86, result3: "راسب" },
-    { id: 25012, name: "جاسيكا هاني شحات", code: "P9146", status: "تمام", score1: 30.85, result1: "ناجح", score2: 29.20, result2: "حضور ضعيف", score3: 27.47576, result3: "حضور ضعيف" },
-    { id: 25013, name: "جاكلين نبيل صبحي", code: "P6317", status: "تمام", score1: 25.86, result1: "تحريري ضعيف", score2: 40.75, result2: "حضور ضعيف", score3: 27.61582, result3: "حضور ضعيف" },
-    { id: 25014, name: "جرجس اسامة اسكندر", code: "P3182", status: "تمام", score1: 30.59, result1: "ناجح", score2: 36.39, result2: "حضور ضعيف", score3: 18.01, result3: "راسب" },
-    { id: 25015, name: "جورج بيشوى صبحي", code: "P7463", status: "تمام", score1: 17.89, result1: "تحريري ضعيف", score2: 44.84, result2: "ناجح", score3: 23.44, result3: "راسب" },
-    { id: 25016, name: "جورج توفيق نبيل", code: "P5720", status: "تمام", score1: 29.21, result1: "ناجح", score2: 29.10, result2: "حضور ضعيف", score3: 10.59, result3: "راسب" },
-    { id: 25017, name: "جومانة ميلاد نبيل", code: "P7396", status: "تمام", score1: 4.77, result1: "تحريري ضعيف", score2: 5.45, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25018, name: "جون جاد وهيب", code: "P8450", status: "تمام", score1: 44.06, result1: "ناجح", score2: 40.47, result2: "ناجح", score3: 19.08, result3: "راسب" },
-    { id: 25019, name: "دميانة اسامة لويس سليم", code: "P8029", status: "تمام", score1: 16.73, result1: "راسب", score2: 15.00, result2: "راسب", score3: 4.08, result3: "راسب" },
-    { id: 25020, name: "دميانة عماد وصفى عوض", code: "P7430", status: "تمام", score1: 3.15, result1: "تحريري ضعيف", score2: 6.00, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25021, name: "ساندرا عزمي عزت", code: "P6298", status: "تمام", score1: 53.27, result1: "ناجح", score2: 51.74, result2: "ناجح", score3: 27.55012, result3: "ناجح" },
-    { id: 25022, name: "ساندرا فادي فتحي", code: "P7045", status: "تمام", score1: 49.66, result1: "ناجح", score2: 48.36, result2: "ناجح", score3: 25.83, result3: "تحريري ضعيف" },
-    { id: 25023, name: "سلفيا سامح نبيل جورج", code: "P8649", status: "تمام", score1: 2.79, result1: "تحريري ضعيف", score2: 3.19, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25024, name: "سمعان اشرف فريد", code: "P5230", status: "تمام", score1: 34.77, result1: "ناجح", score2: 37.74, result2: "حضور ضعيف", score3: 25.10, result3: "تحريري ضعيف" },
-    { id: 25025, name: "سيلفيا سمير صبحي حنا", code: "P2743", status: "تمام", score1: 28.25, result1: "ناجح", score2: 35.89, result2: "حضور ضعيف", score3: 23.03, result3: "راسب" },
-    { id: 25026, name: "سيلفيا عزمي عزت", code: "P5081", status: "تمام", score1: 48.31, result1: "ناجح", score2: 47.95, result2: "حضور ضعيف", score3: 46.71, result3: "ناجح" },
-    { id: 25027, name: "شيري فليمون ناجح", code: "P4198", status: "تمام", score1: 54.79, result1: "ناجح", score2: 59.76, result2: "ناجح", score3: 34.03, result3: "حضور ضعيف" },
-    { id: 25028, name: "فادي سمير سعيد", code: "P8264", status: "تمام", score1: 49.60, result1: "راسب", score2: 48.40, result2: "حضور ضعيف", score3: 45.24, result3: "ناجح" },
-    { id: 25029, name: "فيرينا اميل جورجي", code: "P1623", status: "تمام", score1: 50.33, result1: "ناجح", score2: 45.92, result2: "ناجح", score3: 22.48, result3: "راسب" },
-    { id: 25030, name: "فيرينا سامح يوحنا", code: "P3498", status: "تمام", score1: 18.81, result1: "ناجح", score2: 5.50, result2: "راسب", score3: 9.55, result3: "راسب" },
-    { id: 25031, name: "كاترين عماد ملاك", code: "P6342", status: "تمام", score1: 42.73, result1: "ناجح", score2: 47.18, result2: "ناجح", score3: 15.79, result3: "راسب" },
-    { id: 25032, name: "كرستينا أشرف فهيم", code: "P3041", status: "تمام", score1: 28.39, result1: "راسب", score2: 52.05, result2: "ناجح", score3: 33.18, result3: "تحريري ضعيف" },
-    { id: 25033, name: "كيرلس عادل جاد", code: "P2308", status: "تمام", score1: 13.76, result1: "تحريري ضعيف", score2: 49.73, result2: "ناجح", score3: 26.72, result3: "راسب" },
-    { id: 25034, name: "كيرلس ناصر راضي", code: "P7023", status: "تمام", score1: 41.00, result1: "ناجح", score2: 39.37, result2: "حضور ضعيف", score3: 27.88, result3: "تحريري ضعيف" },
-    { id: 25035, name: "ماتيلدا ممدوح سامي", code: "P5762", status: "تمام", score1: 4.16, result1: "تحريري ضعيف", score2: 4.75, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25036, name: "مارتينا نصري بخيت يسي", code: "P6851", status: "تمام", score1: 41.18, result1: "ناجح", score2: 44.32, result2: "ناجح", score3: 19.59, result3: "راسب" },
-    { id: 25037, name: "مارتينا هانى فهمي", code: "P7036", status: "تمام", score1: 10.90, result1: "تحريري ضعيف", score2: 12.45, result2: "راسب", score3: 6.56, result3: "راسب" },
-    { id: 25038, name: "مارتينا وليد كامل", code: "P5980", status: "تمام", score1: 31.99, result1: "ناجح", score2: 44.27, result2: "ناجح", score3: 15.07, result3: "راسب" },
-    { id: 25039, name: "ماريا بطرس ثابت", code: "P2518", status: "تمام", score1: 57.34, result1: "ناجح", score2: 56.90, result2: "ناجح", score3: 50.36, result3: "ناجح" },
-    { id: 25040, name: "ماريا مجدي بشري", code: "P9042", status: "تمام", score1: 23.38, result1: "تحريري ضعيف", score2: 28.09, result2: "تحريري ضعيف", score3: 14.85, result3: "راسب" },
-    { id: 25041, name: "ماريا ناجي وديع", code: "P3176", status: "تمام", score1: 48.53, result1: "ناجح", score2: 44.37, result2: "ناجح", score3: 41.89, result3: "حضور ضعيف" },
-    { id: 25042, name: "ماريان عادل عريان جيد", code: "P5894", status: "تمام", score1: 42.51, result1: "ناجح", score2: 40.58, result2: "حضور ضعيف", score3: 10.79, result3: "راسب" },
-    { id: 25043, name: "مارينا سامح ملاك عطية", code: "P4170", status: "تمام", score1: 43.24, result1: "ناجح", score2: 44.22, result2: "حضور ضعيف", score3: 26.63, result3: "راسب" },
-    { id: 25044, name: "مارينا سمير سليمان جرجس", code: "P7483", status: "تمام", score1: 18.47, result1: "تحريري ضعيف", score2: 17.34, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25045, name: "مارينا صبري متري", code: "P5106", status: "تمام", score1: 40.90, result1: "ناجح", score2: 18.97, result2: "راسب", score3: 6.56, result3: "راسب" },
-    { id: 25046, name: "مارينا كمال فهمي", code: "P2954", status: "تمام", score1: 41.42, result1: "ناجح", score2: 38.25, result2: "ناجح", score3: 27558.44, result3: "حضور ضعيف" },
-    { id: 25047, name: "مايكل جرجس وصفي", code: "P1632", status: "تمام", score1: 40.78, result1: "ناجح", score2: 36.20, result2: "حضور ضعيف", score3: 28.82, result3: "تحريري ضعيف" },
-    { id: 25048, name: "مايكل كمال فهمي", code: "P6048", status: "تمام", score1: 34.73, result1: "ناجح", score2: 34.49, result2: "حضور ضعيف", score3: 15.69, result3: "راسب" },
-    { id: 25049, name: "مريم عادل منير جرجس", code: "P6098", status: "تمام", score1: 48.18, result1: "ناجح", score2: 49.35, result2: "ناجح", score3: 32.61, result3: "تحريري ضعيف" },
-    { id: 25050, name: "ملاك ميخائيل غطاس", code: "P2603", status: "تمام", score1: 42.24, result1: "ناجح", score2: 37.25, result2: "حضور ضعيف", score3: 27600.33, result3: "حضور ضعيف" },
-    { id: 25051, name: "مهرائيل عادل منير", code: "P8027", status: "تمام", score1: 39.94, result1: "ناجح", score2: 46.50, result2: "حضور ضعيف", score3: 36.47, result3: "ناجح" },
-    { id: 25052, name: "ميرا موريس ناجح", code: "P9416", status: "تمام", score1: 29.92, result1: "ناجح", score2: 35.34, result2: "حضور ضعيف", score3: 28.48, result3: "تحريري ضعيف" },
-    { id: 25053, name: "ميرام رامي صبحي صادق", code: "P5239", status: "تمام", score1: 42.46, result1: "ناجح", score2: 40.75, result2: "حضور ضعيف", score3: 36.76, result3: "تحريري ضعيف" },
-    { id: 25054, name: "ميرنا مرقس أيوب", code: "P1347", status: "تمام", score1: 33.26, result1: "ناجح", score2: 36.02, result2: "حضور ضعيف", score3: 23.76, result3: "راسب" },
-    { id: 25055, name: "ميرولا اشرف الفونس", code: "P9610", status: "تمام", score1: 27.39, result1: "راسب", score2: 22.73, result2: "راسب", score3: 21.31, result3: "تحريري ضعيف" },
-    { id: 25056, name: "ميرولا حنا رشدي", code: "P8753", status: "تمام", score1: 37.38, result1: "ناجح", score2: 27.00, result2: "راسب", score3: 21.74, result3: "راسب" },
-    { id: 25057, name: "مينا رضا صالح", code: "P6028", status: "تمام", score1: 22.08, result1: "تحريري ضعيف", score2: 34.83, result2: "حضور ضعيف", score3: 20.97, result3: "راسب" },
-    { id: 25058, name: "مينا منير غطاس", code: "P7613", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 26.00, result2: "حضور ضعيف", score3: 1.56, result3: "راسب" },
-    { id: 25059, name: "مينا وجيه عطية", code: "P5092", status: "تمام", score1: "الحضور غير مسجل", result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25060, name: "نورهان راضي حكيم", code: "P4729", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 30.00, result2: "حضور ضعيف", score3: 13.42, result3: "راسب" },
-    { id: 25061, name: "هناء فزيع فرج خليل", code: "P8490", status: "تمام", score1: "الحضور غير مسجل", result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", score3: 12.31, result3: "راسب" },
-    { id: 25062, name: "هيلانا جرجس ذكري", code: "P3708", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 0.00, result2: "راسب", score3: 12.15, result3: "راسب" },
-    { id: 25063, name: "يؤانا ايمن رشدي", code: "P6947", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 24.00, result2: "حضور ضعيف", score3: 44.78, result3: "ناجح" },
-    { id: 25064, name: "يؤانا سمير بدري", code: "P2035", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 24.00, result2: "حضور ضعيف", score3: 30.26, result3: "راسب" },
-    { id: 25065, name: "مينا سمير لويز", code: "P7345", status: "تمام", score1: "الحضور غير مسجل", result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", score3: 7.31, result3: "راسب" },
-    { id: 25066, name: "يؤانا نسيم اسكندر", code: "P5271", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 26.00, result2: "حضور ضعيف", score3: 42.35, result3: "حضور ضعيف" },
-    { id: 25067, name: "يؤانا مجدي خليل زكي", code: "P6184", status: "تمام", score1: "الحضور غير مسجل", result1: "راسب", score2: 26.00, result2: "حضور ضعيف", score3: 24.70, result3: "راسب" },
-    { id: 25068, name: "يوستينا سامح ابراهيم", code: "P9820", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 0.00, result2: "راسب", score3: 7.37, result3: "راسب" },
-    { id: 25069, name: "يوسف وسام ابراهيم", code: "P1039", status: "تمام", score1: "الحضور غير مسجل", result1: "راسب", score2: 26.00, result2: "حضور ضعيف", score3: 13.18, result3: "راسب" },
-    { id: 25070, name: "يوسي سرور سعيد وهبة", code: "P8462", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 0.00, result2: "راسب", score3: 7.19, result3: "راسب" },
-    { id: 25071, name: "ابانوب جرجس عبدالكريم", code: "P3756", status: "تمام", score1: 37.19, result1: "راسب", score2: 39.41, result2: "حضور ضعيف", score3: 28.00, result3: "حضور ضعيف" },
-    { id: 25072, name: "ابانوب عزمي", code: "P8210", status: "تمام", score1: 4.81, result1: "تحريري ضعيف", score2: 5.50, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25073, name: "اندرو يوسف", code: "P8350", status: "لسه", score1: 0.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25074, name: "انطونيوس سامح زكريا", code: "P2946", status: "تمام", score1: 38.21, result1: "ناجح", score2: 38.86, result2: "حضور ضعيف", score3: 20.00, result3: "راسب" },
-    { id: 25075, name: "ايريني اشرف فهيم", code: "P9051", status: "تمام", score1: 35.98, result1: "ناجح", score2: 25.40, result2: "حضور ضعيف", score3: 17.13, result3: "راسب" },
-    { id: 25076, name: "ايلاريا روماني شفيق", code: "P5206", status: "تمام", score1: 12.83, result1: "تحريري ضعيف", score2: 14.67, result2: "راسب", score3: 7.06, result3: "راسب" },
-    { id: 25077, name: "بطرس عجبان بطرس", code: "P6471", status: "تمام", score1: 47.70, result1: "ناجح", score2: 43.59, result2: "ناجح", score3: 29.64, result3: "راسب" },
-    { id: 25078, name: "بيشوي رؤوف سمير كامل", code: "P7904", status: "تمام", score1: 38.00, result1: "ناجح", score2: 28.40, result2: "تحريري ضعيف", score3: 9.43, result3: "راسب" },
-    { id: 25079, name: "بيشوي عطا نجيب", code: "P5283", status: "تمام", score1: 40.18, result1: "ناجح", score2: 44.26, result2: "حضور ضعيف", score3: 13.94, result3: "راسب" },
-    { id: 25080, name: "توماس حنا فتحي", code: "P3569", status: "لسه", score1: 34.21, result1: "ناجح", score2: 33.39, result2: "حضور ضعيف", score3: 27469.20, result3: "حضور ضعيف" },
-    { id: 25081, name: "توماس عزت", code: "P4082", status: "لسه", score1: 27.52, result1: "ناجح", score2: 20.30, result2: "راسب", score3: 4.35, result3: "راسب" },
-    { id: 25082, name: "جرجس رأفت صبري فوزي", code: "P6574", status: "تمام", score1: 50.48, result1: "راسب", score2: 49.07, result2: "ناجح", score3: 40.11, result3: "ناجح" },
-    { id: 25083, name: "جوليانا رأفت نجيب", code: "P1248", status: "تمام", score1: 20.09, result1: "تحريري ضعيف", score2: 24.33, result2: "تحريري ضعيف", score3: 16.36, result3: "راسب" },
-    { id: 25084, name: "داليا ممدوح فوزي فهيم", code: "P1375", status: "تمام", score1: 16.01, result1: "تحريري ضعيف", score2: 11.10, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25085, name: "راندا عصام هرني", code: "P2084", status: "تمام", score1: 14.39, result1: "تحريري ضعيف", score2: 34.73, result2: "حضور ضعيف", score3: 14.06, result3: "راسب" },
-    { id: 25086, name: "روفينا سامي وليم", code: "P3597", status: "تمام", score1: 7.03, result1: "تحريري ضعيف", score2: 8.03, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25087, name: "ريهام رمزي فهمي", code: "P8106", status: "تمام", score1: 43.77, result1: "ناجح", score2: 42.54, result2: "ناجح", score3: 27553.34, result3: "ناجح" },
-    { id: 25088, name: "ساندرا سامي", code: "P9750", status: "تمام", score1: 33.24, result1: "ناجح", score2: 10.79, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25089, name: "ساندرا سمير صبحي", code: "P1342", status: "تمام", score1: 36.13, result1: "ناجح", score2: 42.21, result2: "حضور ضعيف", score3: 27536.37, result3: "حضور ضعيف" },
-    { id: 25090, name: "ساندرا نصر فهمي", code: "P3127", status: "تمام", score1: 17.11, result1: "تحريري ضعيف", score2: 17.50, result2: "راسب", score3: 5.07, result3: "راسب" },
-    { id: 25091, name: "سوسنا ايهاب وصفى عزمي", code: "P6918", status: "تمام", score1: 37.94, result1: "ناجح", score2: 37.31, result2: "حضور ضعيف", score3: 17.74, result3: "راسب" },
-    { id: 25092, name: "فيرونيا وليد كامل بقطر", code: "P9075", status: "تمام", score1: 36.96, result1: "ناجح", score2: 28.81, result2: "تحريري ضعيف", score3: 10.76, result3: "راسب" },
-    { id: 25093, name: "كاترين ايهاب ماهر زاخر", code: "P8927", status: "تمام", score1: 49.37, result1: "ناجح", score2: 53.22, result2: "ناجح", score3: 42.63, result3: "ناجح" },
-    { id: 25094, name: "كرستين وجدي ناشد", code: "P9283", status: "تمام", score1: 37.61, result1: "ناجح", score2: 33.95, result2: "حضور ضعيف", score3: 27551.89, result3: "ناجح" },
-    { id: 25095, name: "كلارا رضا صالح بخيت", code: "P7620", status: "تمام", score1: 45.17, result1: "ناجح", score2: 35.00, result2: "حضور ضعيف", score3: 18.48, result3: "راسب" },
-    { id: 25096, name: "كيرلس اشرف سمير", code: "P5108", status: "تمام", score1: 30.43, result1: "ناجح", score2: 34.95, result2: "حضور ضعيف", score3: "الحضور غير مسجل", result3: "#VALUE!" },
-    { id: 25097, name: "كيرلس حازم ثابت", code: "P6732", status: "تمام", score1: 38.72, result1: "ناجح", score2: 28.14, result2: "راسب", score3: 27516.46, result3: "حضور ضعيف" },
-    { id: 25098, name: "كيرلس شنودة صبري", code: "P4902", status: "تمام", score1: 12.13, result1: "تحريري ضعيف", score2: 22.72, result2: "حضور ضعيف", score3: 3.00, result3: "راسب" },
-    { id: 25099, name: "كيرلس ظريف صبحي", code: "P7841", status: "لسه", score1: 40.23, result1: "ناجح", score2: 41.40, result2: "ناجح", score3: 16.68, result3: "حضور ضعيف" },
-    { id: 25100, name: "مادونا فتحي زاهر", code: "P9604", status: "تمام", score1: 35.23, result1: "ناجح", score2: 41.80, result2: "حضور ضعيف", score3: 49.16, result3: "ناجح" },
-    { id: 25101, name: "مارتينا نصر زغلول", code: "P5048", status: "تمام", score1: 45.24, result1: "ناجح", score2: 50.16, result2: "ناجح", score3: 27458.29, result3: "ناجح" },
-    { id: 25103, name: "ماركو القمص انطون", code: "P1963", status: "لسه", score1: 38.26, result1: "ناجح", score2: 33.16, result2: "حضور ضعيف", score3: 39.64, result3: "حضور ضعيف" },
-    { id: 25104, name: "ماريان ناثان بحر رزق", code: "P6423", status: "تمام", score1: 36.72, result1: "ناجح", score2: 21.63, result2: "تحريري ضعيف", score3: 27601.41, result3: "ناجح" },
-    { id: 25105, name: "مارينا اشرف فهيم", code: "P5618", status: "تمام", score1: 37.40, result1: "ناجح", score2: 38.92, result2: "حضور ضعيف", score3: 25.99, result3: "تحريري ضعيف" },
-    { id: 25106, name: "مارينا رؤوف سمير كامل", code: "P9325", status: "تمام", score1: 3.15, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25107, name: "ماريو ميلاد اسحاق", code: "P6829", status: "تمام", score1: 35.54, result1: "ناجح", score2: 38.50, result2: "حضور ضعيف", score3: 27571.26, result3: "ناجح" },
-    { id: 25108, name: "مايكل سامي سمير", code: "P8795", status: "لسه", score1: 18.00, result1: "ناجح", score2: 34.00, result2: "حضور ضعيف", score3: 6.85, result3: "راسب" },
-    { id: 25109, name: "مريام رأفت داود", code: "P3186", status: "تمام", score1: 37.76, result1: "ناجح", score2: 37.55, result2: "حضور ضعيف", score3: 23.53, result3: "راسب" },
-    { id: 25110, name: "مريم اميل طويلة", code: "P8465", status: "تمام", score1: 42.99, result1: "ناجح", score2: 44.85, result2: "حضور ضعيف", score3: 27615.70, result3: "حضور ضعيف" },
-    { id: 25111, name: "مريم مقار القس يعقوب موسي", code: "P8934", status: "تمام", score1: 38.00, result1: "ناجح", score2: 37.71, result2: "حضور ضعيف", score3: 28.84, result3: "تحريري ضعيف" },
-    { id: 25112, name: "مريم يوسف ثابت", code: "P7105", status: "تمام", score1: 26.08, result1: "ناجح", score2: 21.35, result2: "راسب", score3: 15.48, result3: "راسب" },
-    { id: 25113, name: "ميرنا عماد عطية", code: "P8294", status: "تمام", score1: 43.63, result1: "ناجح", score2: 42.44, result2: "حضور ضعيف", score3: 38.78, result3: "تحريري ضعيف" },
-    { id: 25114, name: "مينا يوسف وليم يوسف", code: "P4368", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 24.00, result2: "حضور ضعيف", score3: 40.68, result3: "ناجح" },
-    { id: 25115, name: "هايدي وليد عزت", code: "P4716", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 24.00, result2: "حضور ضعيف", score3: 0.00, result3: "راسب" },
-    { id: 25116, name: "يؤانا عماد ملاك", code: "P4791", status: "لسه", score1: "الحضور غير مسجل", result1: "ناجح", score2: 26.00, result2: "حضور ضعيف", score3: 3.32, result3: "راسب" },
-    { id: 25117, name: "يوستينا عزت ابراهيم يوسف", code: "P6752", status: "تمام", score1: "الحضور غير مسجل", result1: "راسب", score2: 0.00, result2: "راسب", score3: 7.19, result3: "راسب" },
-    { id: 25118, name: "مايكل عماد رمزي", code: "P4721", status: "لسه", score1: 43.71, result1: "ناجح", score2: 43.21, result2: "ناجح", score3: "الحضور غير مسجل", result3: "#VALUE!" },
-    { id: 25119, name: "فيولا سامح منصور نصر", code: "P4701", status: "تمام", score1: 7.74, result1: "تحريري ضعيف", score2: 31.25, result2: "حضور ضعيف", score3: 0.00, result3: "راسب" },
-    { id: 25120, name: "جوفاني القس برسوم سامي", code: "P9673", status: "تمام", score1: 36.84, result1: "ناجح", score2: 48.96, result2: "ناجح", score3: 35.90, result3: "تحريري ضعيف" },
-    { id: 25121, name: "ميرنا عاطف خليل", code: "P4076", status: "تمام", score1: 14.26, result1: "تحريري ضعيف", score2: 40.70, result2: "حضور ضعيف", score3: 8.80, result3: "راسب" },
-    { id: 25122, name: "ماريز عاطف خلف وهبه", code: "P8750", status: "تمام", score1: 43.47, result1: "ناجح", score2: 38.99, result2: "حضور ضعيف", score3: 27.58, result3: "راسب" },
-    { id: 25123, name: "رامي فرج مليكة", code: "P4195", status: "تمام", score1: 49.65, result1: "ناجح", score2: 54.46, result2: "ناجح", score3: 51.47, result3: "ناجح" },
-    { id: 25124, name: "ميرنا اسامة خيري", code: "P7650", status: "لسه", score1: 28.02, result1: "راسب", score2: 45.45, result2: "حضور ضعيف", score3: 19.81, result3: "راسب" },
-    { id: 25125, name: "يؤانا مدحت يسري", code: "P7920", status: "لسه", score1: "الحضور غير مسجل", result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", score3: 7.19, result3: "راسب" },
-    { id: 25126, name: "جومانا نادر سمير", code: "P6051", status: "تمام", score1: 45.95, result1: "ناجح", score2: 44.63, result2: "ناجح", score3: 35.81, result3: "حضور ضعيف" },
-    { id: 25127, name: "كيرلس حنا فوزي", code: "P8921", status: "تمام", score1: 24.24, result1: "ناجح", score2: 29.99, result2: "حضور ضعيف", score3: 9.56, result3: "راسب" },
-    { id: 25128, name: "بيشوي ملاك فوزي", code: "P9620", status: "لسه", score1: 27.70, result1: "ناجح", score2: 0.00, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25129, name: "هايدي امجد ونيس", code: "P6852", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 22.00, result2: "حضور ضعيف", score3: "الحضور غير مسجل", result3: "#VALUE!" },
-    { id: 25130, name: "جورجيت نعيم", code: "P8052", status: "لسه", score1: 37.19, result1: "ناجح", score2: 41.30, result2: "حضور ضعيف", score3: 19.15, result3: "راسب" },
-    { id: 25131, name: "روفينا يوسف", code: "P7643", status: "تمام", score1: 49.95, result1: "ناجح", score2: 49.60, result2: "ناجح", score3: 39.05, result3: "ناجح" },
-    { id: 25132, name: "كيرلس أشرف صبحي", code: "P9405", status: "لسه", score1: 10.11, result1: "تحريري ضعيف", score2: 43.56, result2: "حضور ضعيف", score3: 22.80, result3: "راسب" },
-    { id: 25133, name: "اندرو امجد ونيس", code: "P2840", status: "لسه", score1: 29.94, result1: "ناجح", score2: 18.50, result2: "راسب", score3: 4.72, result3: "راسب" },
-    { id: 25134, name: "كيرلس غطاس", code: "P5429", status: "لسه", score1: 9.19, result1: "تحريري ضعيف", score2: 10.50, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25135, name: "فيلوباتير اميل جورج", code: "P2850", status: "تمام", score1: 23.96, result1: "تحريري ضعيف", score2: 10.30, result2: "راسب", score3: 24.46, result3: "حضور ضعيف" },
-    { id: 25136, name: "روماني عصام عبدالله", code: "P5901", status: "لسه", score1: 15.64, result1: "تحريري ضعيف", score2: 47.88, result2: "ناجح", score3: 27539.71, result3: "حضور ضعيف" },
-    { id: 25137, name: "ايريني سمير بخيت", code: "P7314", status: "تمام", score1: 30.11, result1: "ناجح", score2: 33.10, result2: "حضور ضعيف", score3: 24.14, result3: "تحريري ضعيف" },
-    { id: 25138, name: "شيرين عطا حافظ", code: "P5317", status: "لسه", score1: 34.28, result1: "ناجح", score2: 39.75, result2: "حضور ضعيف", score3: 4.33, result3: "راسب" },
-    { id: 25139, name: "يسى رفعت فتحى", code: "P8394", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 0.00, result2: "راسب", score3: 7.21, result3: "راسب" },
-    { id: 25141, name: "ناديه يوسف شحاته", code: "P8410", status: "لسه", score1: "الحضور غير مسجل", result1: "ناجح", score2: 10.00, result2: "راسب", score3: 26.62, result3: "تحريري ضعيف" },
-    { id: 25142, name: "ماتيلدا ممدوح سامي غطاس", code: "P8497", status: "تمام", score1: "الحضور غير مسجل", result1: "تحريري ضعيف", score2: 15.99, result2: "راسب", score3: 0.00, result3: "راسب" },
-    { id: 25143, name: "ماريز ماجد عجيب", code: "P2097", status: "لسه", score1: 8.74, result1: "تحريري ضعيف", score2: 31.70, result2: "حضور ضعيف", score3: 21.90, result3: "راسب" },
-    { id: 25144, name: "ابانوب ايمن صابر", code: "P9402", status: "لسه", score1: 8.59, result1: "راسب", score2: 31.75, result2: "حضور ضعيف", score3: 9.62, result3: "راسب" },
-    { id: 25145, name: "مايكل جرجس عوني", code: "P9407", status: "لسه", score1: 27.88, result1: "تحريري ضعيف", score2: 33.72, result2: "حضور ضعيف", finalScore: 3.60, finalResult: "راسب" },
-    { id: 25146, name: "سارة سعد خلة", code: "P4285", status: "تمام", score1: 23.50, result1: "ناجح", score2: 18.42, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25147, name: "كيرلس اشرف سمير", code: "P2876", status: "لسه", score1: 33.67, result1: "ناجح", score2: 16.37, result2: "راسب", finalScore: 19.50, finalResult: "راسب" },
-    { id: 25149, name: "مادلين عطية جرجس", code: "P4320", status: "تمام", score1: 28.08, result1: "ناجح", score2: 40.75, result2: "حضور ضعيف", finalScore: 12.64, finalResult: "راسب" },
-    { id: 25150, name: "ابرام عماد", code: "P7321", status: "لسه", score1: 32.41, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25151, name: "جونير حنا رشدى", code: "P2913", status: "لسه", score1: 0.00, result1: "ناجح", score2: 20.50, result2: "حضور ضعيف", finalScore: 10.13, finalResult: "راسب" },
-    { id: 25152, name: "ابرام مجدي نصار", code: "P6475", status: "تمام", score1: 24.94, result1: "ناجح", score2: 27.15, result2: "راسب", finalScore: 23.31, finalResult: "راسب" },
-    { id: 25153, name: "جانو سامح", code: "P4028", status: "لسه", score1: 33.56, result1: "ناجح", score2: 4.50, result2: "راسب", finalScore: 0.94, finalResult: "راسب" },
-    { id: 25154, name: "مادونا سعد", code: "P1278", status: "لسه", score1: 25.94, result1: "تحريري ضعيف", score2: 6.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25155, name: "توماس عماد", code: "P2517", status: "تمام", score1: 5.25, result1: "تحريري ضعيف", score2: 10.98, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25156, name: "اندرو السنوسي", code: "P3617", status: "لسه", score1: 6.36, result1: "تحريري ضعيف", score2: 5.40, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25157, name: "مينا ماجد", code: "P2984", status: "لسه", score1: 4.72, result1: "ناجح", score2: 0.00, result2: "راسب", finalScore: 16.25, finalResult: "راسب" },
-    { id: 25158, name: "دميانة لبيب نبيه", code: "P6572", status: "تمام", score1: "الحضور غير مسجل", result1: "تحريري ضعيف", score2: 27.50, result2: "حضور ضعيف", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25159, name: "بكينام نصر", code: "P9032", status: "لسه", score1: 14.81, result1: "ناجح", score2: 11.70, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25160, name: "مريم عماد", code: "P4291", status: "لسه", score1: 26.24, result1: "تحريري ضعيف", score2: 3.85, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25161, name: "كيرلس عماد", code: "P8130", status: "تمام", score1: 3.37, result1: "تحريري ضعيف", score2: 4.25, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25162, name: "نانسي عزت نعيم", code: "P5983", status: "لسه", score1: 3.72, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25163, name: "ملاك سامي عبدالملاك عطية", code: "P1579", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 43.25, result2: "حضور ضعيف", finalScore: 27533.75, finalResult: "ناجح" },
-    { id: 25164, name: "كيرمينا نبيل", code: "P3185", status: "لسه", score1: 35.59, result1: "تحريري ضعيف", score2: 5.55, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25165, name: "ايلارية عماد موسي", code: "P8047", status: "تمام", score1: 4.86, result1: "ناجح", score2: 42.75, result2: "حضور ضعيف", finalScore: 20.16, finalResult: "راسب" },
-    { id: 25166, name: "مريم شنودة موسي", code: "P5370", status: "تمام", score1: 31.76, result1: "ناجح", score2: 49.85, result2: "ناجح", finalScore: 27.86, finalResult: "راسب" },
-    { id: 25167, name: "نورهان نبيل فوزي", code: "P9301", status: "تمام", score1: 36.02, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25168, name: "ناردين خيري العريان", code: "P2175", status: "تمام", score1: "الحضور غير مسجل", result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25169, name: "شادى ايمن سمير", code: "P6270", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 36.42, result2: "حضور ضعيف", finalScore: 19.62, finalResult: "راسب" },
-    { id: 25170, name: "يوساب عماد نصحي", code: "P6107", status: "تمام", score1: 32.47, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25171, name: "مارتينا اشرف عدلي", code: "P2917", status: "لسه", score1: "الحضور غير مسجل", result1: "ناجح", score2: 40.95, result2: "حضور ضعيف", finalScore: 17.10, finalResult: "راسب" },
-    { id: 25172, name: "جيهان سعيد عبده", code: "P9602", status: "لسه", score1: 33.73, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25173, name: "ملاك راضي حكيم", code: "P6382", status: "تمام", score1: 0.00, result1: "ناجح", score2: 25.65, result2: "راسب", finalScore: 27525.07, finalResult: "حضور ضعيف" },
-    { id: 25174, name: "مارثا بولس صديق", code: "P3725", status: "تمام", score1: 34.95, result1: "تحريري ضعيف", score2: 11.20, result2: "راسب", finalScore: 25.36, finalResult: "راسب" },
-    { id: 25175, name: "مارفي مجدي كمال", code: "P8407", status: "تمام", score1: 16.90, result1: "ناجح", score2: 10.90, result2: "راسب", finalScore: 5.36, finalResult: "راسب" },
-    { id: 25176, name: "مارتينا واصف موريس", code: "P4129", status: "لسه", score1: 20.29, result1: "ناجح", score2: 40.50, result2: "حضور ضعيف", finalScore: 24.67, finalResult: "راسب" },
-    { id: 25177, name: "كيرلس رضا شفيق", code: "P3567", status: "تمام", score1: 34.69, result1: "ناجح", score2: 16.00, result2: "راسب", finalScore: 5.02, finalResult: "راسب" },
-    { id: 25178, name: "انطونيوس لابان فهمي", code: "P1067", status: "لسه", score1: 31.05, result1: "ناجح", score2: 37.04, result2: "حضور ضعيف", finalScore: 33.04, finalResult: "حضور ضعيف" },
-    { id: 25179, name: "ايريني وليد عزت", code: "P3179", status: "لسه", score1: 28.41, result1: "ناجح", score2: 40.06, result2: "حضور ضعيف", finalScore: 17.94, finalResult: "راسب" },
-    { id: 25181, name: "مارينا عزت عبد الفادى", code: "P8031", status: "لسه", score1: 30.02, result1: "ناجح", score2: 29.75, result2: "حضور ضعيف", finalScore: 25.15, finalResult: "راسب" },
-    { id: 25182, name: "ايريني عادل جميل", code: "P6820", status: "لسه", score1: 27.98, result1: "ناجح", score2: 13.65, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25183, name: "كارن جوزيف نجيب", code: "P7304", status: "لسه", score1: 33.03, result1: "ناجح", score2: 10.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25184, name: "كيرلس عزت نعيم", code: "P6795", status: "تمام", score1: 22.64, result1: "ناجح", score2: 5.75, result2: "راسب", finalScore: 9.63, finalResult: "راسب" },
-    { id: 25185, name: "يوستينا رامى منير", code: "P4316", status: "تمام", score1: 16.70, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25186, name: "مريم اسحاق شفى", code: "P7902", status: "تمام", score1: 26.03, result1: "تحريري ضعيف", score2: 5.05, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25187, name: "كرستين هلال فوزى", code: "P5617", status: "تمام", score1: "الحضور غير مسجل", result1: "ناجح", score2: 18.75, result2: "حضور ضعيف", finalScore: 14.10, finalResult: "حضور ضعيف" },
-    { id: 25188, name: "ميرنا الفونس بديع", code: "P3814", status: "", score1: 8.92, result1: "ناجح", score2: 33.50, result2: "حضور ضعيف", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25190, name: "جينسيا ناجى عياد", code: "P5041", status: "", score1: 21.41, result1: "ناجح", score2: 5.75, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25191, name: "مريم سامح مدحت", code: "P2513", status: "", score1: 20.00, result1: "ناجح", score2: 10.85, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25192, name: "ناردين ونجت فكيه", code: "P3064", status: "", score1: 19.00, result1: "ناجح", score2: 26.00, result2: "حضور ضعيف", finalScore: 4.20, finalResult: "راسب" },
-    { id: 25193, name: "كيرلس فايق", code: "P9614", status: "", score1: 18.00, result1: "تحريري ضعيف", score2: 4.50, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25194, name: "كيرلس اسامة عدلى", code: "P4395", status: "", score1: 20.00, result1: "تحريري ضعيف", score2: 10.00, result2: "راسب", finalScore: 0.00, finalResult: "راسب" },
-    { id: 25195, name: "بافلى اسامة ميخائيل موسي", code: "P1293", status: "لسه", score1: 0.00, result1: "ناجح", score2: 13.75, result2: "راسب", finalScore: 18.74, finalResult: "راسب" },
-    { id: 25196, name: "جرجس هاني ثابت", code: "P1905", status: "تمام", score1: 0.00, result1: "ناجح", score2: 15.20, result2: "راسب", finalScore: 24.96, finalResult: "راسب" },
-    { id: 25197, name: "جاكلين منير راغب", code: "P8293", status: "", score1: 15.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25198, name: "جيسيكا ناجي", code: "P6287", status: "تمام", score1: 23.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25199, name: "سيمون نسيم عجبان", code: "P7936", status: "", score1: 0.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25200, name: "كارن جوزيف", code: "P1958", status: "", score1: 0.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25201, name: "مهرائيل عادل", code: "P4798", status: "", score1: 0.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25202, name: "ميرنا عادل غبريال", code: "P5923", status: "", score1: 0.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25203, name: "هيلانه هاني عريان", code: "P5123", status: "تمام", score1: 0.00, result1: "ناجح", score2: 20.00, result2: "حضور ضعيف", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25204, name: "يوساب عماد نصحي", code: "P2943", status: "", score1: 0.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25205, name: "يوستينا دانيال فتح اللة", code: "P7508", status: "", score1: 24.00, result1: "تحريري ضعيف", score2: 0.00, result2: "راسب", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" },
-    { id: 25206, name: "يؤانا ماهر عياد", code: "P3957", status: "لسه", score1: 0.00, result1: "تحريري ضعيف", score2: "الحضور غير مسجل", result2: "#VALUE!", finalScore: "الحضور غير مسجل", finalResult: "#VALUE!" }
-
-
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    ];*/
-
-
     let students = [
     { id: 11111, name: "عينة", code: "P1111", status: "تمام", score1: 19.5, result1: "راسب", score2: 15.34, result2: "حضور ضعيف", score3: 10.03, result3: "تحريري ضعيف" },
-    { id: 11112, name: "عينة", code: "P1111", status: "تمام", score1: 60, result1: "ناجح", score2: 15.34, result2: "حضور ضعيف", score3: 10.03, result3: "تحريري ضعيف" },
+    { id: 11112, name: "عينة", code: "P1111", status: "تمام", score1: 19.5, result1: "ناجح", score2: 15.34, result2: "حضور ضعيف", score3: 10.03, result3: "تحريري ضعيف" },
     { id: 25001, name: "ابانوب اكرم غالى", code: "P1283", status: "تمام", score1: 19.52, result1: "راسب", score2: 15.34, result2: "راسب", score3: 10.03, result3: "راسب" },
     { id: 25144, name: "ابانوب ايمن صابر", code: "P9402", status: "لسه", score1: 27.88, result1: "حضور ضعيف", score2: 31.75, result2: "حضور ضعيف", score3: 9.62, result3: "راسب" },
     { id: 25071, name: "ابانوب جرجس عبدالكريم", code: "P3756", status: "تمام", score1: 37.19, result1: "حضور ضعيف", score2: 39.41, result2: "حضور ضعيف", score3: 28.00, result3: "حضور ضعيف" },
@@ -481,7 +245,8 @@
 
 
 ];
-   function searchStudent() {
+
+        function searchStudent() {
             let inputId = document.getElementById("studentId").value;
             let inputCode = document.getElementById("studentCode").value;
             let student;
@@ -550,7 +315,6 @@
                 alert("لم يتم العثور على الطالب!");
             }
         }
-
     </script>
 
 </body>
