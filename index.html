@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,6 +39,7 @@
             flex-direction: column;
             gap: 10px;
             margin-bottom: 15px;
+            position: relative;
         }
 
         input {
@@ -45,6 +47,37 @@
             border: 1px solid #ccc;
             border-radius: 10px;
             font-size: 16px;
+            width: 100%;
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding-right: 40px;
+        }
+
+        .toggle-icon {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .toggle-icon img {
+            width: 100%;
+            height: 100%;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+
+        .toggle-icon img:hover {
+            filter: grayscale(0%);
         }
 
         button {
@@ -83,7 +116,8 @@
             overflow: hidden;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: center;
@@ -94,37 +128,58 @@
             color: white;
         }
 
-        .weak-attendance { background-color: #ADD8E6; }
-        .weak-exam { background-color: #D2B48C; }
-        .fail { background-color: #f9ada3; }
-        .pass { background-color: #abf7bd; }
+        .weak-attendance {
+            background-color: #ADD8E6;
+        }
+
+        .weak-exam {
+            background-color: #D2B48C;
+        }
+
+        .fail {
+            background-color: #f9ada3;
+        }
+
+        .pass {
+            background-color: #abf7bd;
+        }
 
         @media (max-width: 600px) {
             .container {
                 width: 90%;
             }
-            input, button {
+
+            input,
+            button {
                 font-size: 14px;
             }
+
             table {
                 font-size: 14px;
             }
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
         <img src="habib gerges.jpg" sizes="width=50%" style="width: 80%; height: 50%;">
-        <h4>+++++++++++++++++++++<h4><br>
+        <h4>+++++++++++++++++++++</h4><br>
         <h2>نتيجة الترم الاول فصل اعداد خدام</h2>
-        <h4>+++++++++++++++++++++<h4>
-        <br>
-        <br>
+        <h4>+++++++++++++++++++++</h4>
+        <br><br>
 
         <div class="input-group">
             <input type="number" id="studentId" placeholder=" أدخل الـ ID">
-            <input type="text" id="studentCode" placeholder="أدخل الكود">
+
+            <div class="password-wrapper">
+                <input type="password" id="myInput" placeholder="أدخل الكود">
+                <div class="toggle-icon" onclick="togglePassword()">
+                    <img id="eyeIcon" src="https://cdn-icons-png.flaticon.com/512/565/565655.png" alt="Show/Hide">
+                </div>
+            </div>
+
             <button onclick="searchStudent()">بحث</button>
         </div>
 
@@ -145,8 +200,22 @@
     </div>
 
     <script>
-    let students = [
-    { id: 11111, name: "عينة", code: "P1111", status: "تمام", score1: 19.5, result1: "راسب", score2: 15.34, result2: "حضور ضعيف", score3: 10.03, result3: "تحريري ضعيف" },
+        // زر إظهار / إخفاء كلمة المرور
+        function togglePassword() {
+            const input = document.getElementById("myInput");
+            const icon = document.getElementById("eyeIcon");
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.src = "https://cdn-icons-png.flaticon.com/512/709/709612.png"; // open eye
+            } else {
+                input.type = "password";
+                icon.src = "https://cdn-icons-png.flaticon.com/512/565/565655.png"; // closed eye
+            }
+        }
+
+
+            /* { id: 11111, name: "عينة", code: "P1111", status: "تمام", score1: 19.5, result1: "راسب", score2: 15.34, result2: "حضور ضعيف", score3: 10.03, result3: "تحريري ضعيف" },
     { id: 11112, name: "عينة", code: "P1111", status: "تمام", score1: 19.5, result1: "ناجح", score2: 15.34, result2: "حضور ضعيف", score3: 10.03, result3: "تحريري ضعيف" },
     { id: 25001, name: "ابانوب اكرم غالى", code: "P1283", status: "تمام", score1: 19.52, result1: "راسب", score2: 15.34, result2: "راسب", score3: 10.03, result3: "راسب" },
     { id: 25144, name: "ابانوب ايمن صابر", code: "P9402", status: "لسه", score1: 27.88, result1: "حضور ضعيف", score2: 31.75, result2: "حضور ضعيف", score3: 9.62, result3: "راسب" },
@@ -241,14 +310,487 @@
     { id: 25094, name: "كرستين وجدي ناشد", code: "P9283", status: "تمام", score1: 37.61, result1: "حضور ضعيف", score2: 33.95, result2: "حضور ضعيف", score3: 27551.89, result3: "ناجح" },
     { id: 25032, name: "كرستينا أشرف فهيم", code: "P3041", status: "تمام", score1: 28.39, result1: "تحريري ضعيف", score2: 52.05, result2: "ناجح", score3: 33.18, result3: "تحريري ضعيف" },
     { id: 25095, name: "كلارا رضا صالح بخيت", code: "P7620", status: "تمام", score1: 45.17, result1: "حضور ضعيف", score2: 35.00, result2: "حضور ضعيف", score3: 18.48, result3: "راسب" }
+*/
+
+        // بيانات افتراضية للطلاب للتجربة
+        let students = [
+        
+  {
+    "name": "ابانوب رافت صبرى",
+    "id": 24001,
+    "code": "P3742",
+    "status": "تمام",
+    "score1": 43,
+    "result1": "ناجح",
+    "score2": 38,
+    "result2": "ناجح",
+    "score3": 48,
+    "result3": "ناجح"
+  },
+  {
+    "name": "ابرام عماد نجيب",
+    "id": 24002,
+    "code": "P8591",
+    "status": "لسة",
+    "score1": 38,
+    "result1": "ناجح",
+    "score2": 41,
+    "result2": "ناجح",
+    "score3": 42,
+    "result3": "ناجح"
+  },
+  {
+    "name": "اسحق غبريال فوزي",
+    "id": 24003,
+    "code": "P6203",
+    "status": "تمام",
+    "score1": 53,
+    "result1": "ناجح",
+    "score2": 29,
+    "result2": "تحريرى ضعيف",
+    "score3": 9,
+    "result3": "راسب"
+  },
+  {
+    "name": "باسم وائل",
+    "id": 24004,
+    "code": "P4178",
+    "status": "تمام",
+    "score1": 20,
+    "result1": "تحريرى ضعيف",
+    "score2": 36,
+    "result2": "ناجح",
+    "score3": 29,
+    "result3": "تحريرى ضعيف"
+  },
+  {
+    "name": "بافلي رافت فوزي",
+    "id": 24005,
+    "code": "P9356",
+    "status": "تمام",
+    "score1": 20,
+    "result1": "تحريرى ضعيف",
+    "score2": 38,
+    "result2": "ناجح",
+    "score3": 13,
+    "result3": "تحريرى ضعيف"
+  },
+  {
+    "name": "بولا معوض جاب الله داود",
+    "id": 24006,
+    "code": "P2087",
+    "status": "تمام",
+    "score1": 31,
+    "result1": "حضور ضعيف",
+    "score2": 23,
+    "result2": "راسب",
+    "score3": 14,
+    "result3": "راسب"
+  },
+  {
+    "name": "بيشوي رفعت نياظ",
+    "id": 24007,
+    "code": "P7641",
+    "status": "تمام",
+    "score1": 0,
+    "result1": "راسب",
+    "score2": 0,
+    "result2": "راسب",
+    "score3": 2,
+    "result3": "راسب"
+  },
+  {
+    "name": "جاكلين مجدى كيتشنو",
+    "id": 24008,
+    "code": "P5198",
+    "status": "تمام",
+    "score1": 36,
+    "result1": "حضور ضعيف",
+    "score2": 42,
+    "result2": "حضور ضعيف",
+    "score3": 29,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "چوليانا بطرس چورچ",
+    "id": 24009,
+    "code": "P3024",
+    "status": "تمام",
+    "score1": 31,
+    "result1": "حضور ضعيف",
+    "score2": 32,
+    "result2": "حضور ضعيف",
+    "score3": 25,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "جيهان فندي",
+    "id": 24010,
+    "code": "P6875",
+    "status": "لسة",
+    "score1": 7,
+    "result1": "راسب",
+    "score2": 7,
+    "result2": "راسب",
+    "score3": 10,
+    "result3": "راسب"
+  },
+  {
+    "name": "حنا لمعى فهيم",
+    "id": 24011,
+    "code": "P9420",
+    "status": "تمام",
+    "score1": 50,
+    "result1": "ناجح",
+    "score2": 49,
+    "result2": "ناجح",
+    "score3": 50,
+    "result3": "ناجح"
+  },
+  {
+    "name": "رانا مجدى سمير",
+    "id": 24012,
+    "code": "P1369",
+    "status": "تمام",
+    "score1": 0,
+    "result1": "راسب",
+    "score2": 0,
+    "result2": "راسب",
+    "score3": 0,
+    "result3": "راسب"
+  },
+  {
+    "name": "سارة امجد سمير",
+    "id": 24013,
+    "code": "P8057",
+    "status": "تمام",
+    "score1": 55,
+    "result1": "ناجح",
+    "score2": 47,
+    "result2": "ناجح",
+    "score3": 46,
+    "result3": "ناجح"
+  },
+  {
+    "name": "ساندى نجيب فايز",
+    "id": 24014,
+    "code": "P2903",
+    "status": "تمام",
+    "score1": 38,
+    "result1": "حضور ضعيف",
+    "score2": 39,
+    "result2": "حضور ضعيف",
+    "score3": 36,
+    "result3": "ناجح"
+  },
+  {
+    "name": "ساندي سامي ملك",
+    "id": 24015,
+    "code": "P4786",
+    "status": "تمام",
+    "score1": 51,
+    "result1": "ناجح",
+    "score2": 52,
+    "result2": "ناجح",
+    "score3": 22,
+    "result3": "تحريرى ضعيف"
+  },
+  {
+    "name": "سيلفيا رأفت داود",
+    "id": 24016,
+    "code": "P6312",
+    "status": "لسة",
+    "score1": 41,
+    "result1": "ناجح",
+    "score2": 19,
+    "result2": "تحريرى ضعيف",
+    "score3": 24,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "شيرى عازر جاد",
+    "id": 24017,
+    "code": "P9504",
+    "status": "تمام",
+    "score1": 42,
+    "result1": "ناجح",
+    "score2": 22,
+    "result2": "تحريرى ضعيف",
+    "score3": 8,
+    "result3": "راسب"
+  },
+  {
+    "name": "فادي عوض موسى",
+    "id": 24018,
+    "code": "P7219",
+    "status": "تمام",
+    "score1": 42,
+    "result1": "ناجح",
+    "score2": 42,
+    "result2": "ناجح",
+    "score3": 44,
+    "result3": "ناجح"
+  },
+  {
+    "name": "فيلومينا نشأت ثروت",
+    "id": 24019,
+    "code": "P3846",
+    "status": "تمام",
+    "score1": 41,
+    "result1": "ناجح",
+    "score2": 45,
+    "result2": "ناجح",
+    "score3": 26,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "كاترين جادالله سدراك",
+    "id": 24020,
+    "code": "P5071",
+    "status": "تمام",
+    "score1": 57,
+    "result1": "ناجح",
+    "score2": 56,
+    "result2": "ناجح",
+    "score3": 48,
+    "result3": "ناجح"
+  },
+  {
+    "name": "كريم صبرى نصيف",
+    "id": 24021,
+    "code": "P8297",
+    "status": "تمام",
+    "score1": 7,
+    "result1": "راسب",
+    "score2": 7,
+    "result2": "راسب",
+    "score3": 31,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "كيرلس أيمن رشدي",
+    "id": 24022,
+    "code": "P6142",
+    "status": "تمام",
+    "score1": 49,
+    "result1": "ناجح",
+    "score2": 50,
+    "result2": "ناجح",
+    "score3": 36,
+    "result3": "ناجح"
+  },
+  {
+    "name": "كيرمينا حكيم فايز عجيب",
+    "id": 24023,
+    "code": "P2750",
+    "status": "تمام",
+    "score1": 55,
+    "result1": "ناجح",
+    "score2": 55,
+    "result2": "ناجح",
+    "score3": 40,
+    "result3": "ناجح"
+  },
+  {
+    "name": "مادونا جميل توفيق",
+    "id": 24024,
+    "code": "P4983",
+    "status": "تمام",
+    "score1": 48,
+    "result1": "ناجح",
+    "score2": 50,
+    "result2": "ناجح",
+    "score3": 42,
+    "result3": "ناجح"
+  },
+  {
+    "name": "ماريان ناصر سمير",
+    "id": 24025,
+    "code": "P7526",
+    "status": "تمام",
+    "score1": 33,
+    "result1": "حضور ضعيف",
+    "score2": 31,
+    "result2": "حضور ضعيف",
+    "score3": 31,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "مريم رضانى صبره",
+    "id": 24026,
+    "code": "P9037",
+    "status": "تمام",
+    "score1": 24,
+    "result1": "حضور ضعيف",
+    "score2": 21,
+    "result2": "حضور ضعيف",
+    "score3": 14,
+    "result3": "تحريرى ضعيف"
+  },
+  {
+    "name": "مريم غبور عيسى غبور",
+    "id": 24027,
+    "code": "P1684",
+    "status": "تمام",
+    "score1": 29,
+    "result1": "تحريرى ضعيف",
+    "score2": 51,
+    "result2": "ناجح",
+    "score3": 48,
+    "result3": "ناجح"
+  },
+  {
+    "name": "مريم هاني فهمي",
+    "id": 24028,
+    "code": "P4379",
+    "status": "تمام",
+    "score1": 32,
+    "result1": "حضور ضعيف",
+    "score2": 14,
+    "result2": "راسب",
+    "score3": 36,
+    "result3": "ناجح"
+  },
+  {
+    "name": "مهرائيل الفى نصيف",
+    "id": 24029,
+    "code": "P5208",
+    "status": "تمام",
+    "score1": 54,
+    "result1": "ناجح",
+    "score2": 49,
+    "result2": "ناجح",
+    "score3": 40,
+    "result3": "ناجح"
+  },
+  {
+    "name": "مونيكا ناثان",
+    "id": 24030,
+    "code": "P3165",
+    "status": "لسه",
+    "score1": 42,
+    "result1": "حضور ضعيف",
+    "score2": 14,
+    "result2": "راسب",
+    "score3": 8,
+    "result3": "راسب"
+  },
+  {
+    "name": "هيلانه كريم فوزى",
+    "id": 24031,
+    "code": "P8702",
+    "status": "لسه",
+    "score1": 53,
+    "result1": "ناجح",
+    "score2": 49,
+    "result2": "ناجح",
+    "score3": 38,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "يوستينا ماهر عطية",
+    "id": 24032,
+    "code": "P6951",
+    "status": "تمام",
+    "score1": 35,
+    "result1": "ناجح",
+    "score2": 41,
+    "result2": "ناجح",
+    "score3": 37,
+    "result3": "ناجح"
+  },
+  {
+    "name": "يوسف اسامة فوزي",
+    "id": 24033,
+    "code": "P2407",
+    "status": "تمام",
+    "score1": 36,
+    "result1": "ناجح",
+    "score2": 33,
+    "result2": "ناجح",
+    "score3": 7,
+    "result3": "راسب"
+  },
+  {
+    "name": "يوستينا عبد المسيح",
+    "id": 24034,
+    "code": "P7594",
+    "status": "لسه",
+    "score1": 46,
+    "result1": "ناجح",
+    "score2": 46,
+    "result2": "ناجح",
+    "score3": 28,
+    "result3": "حضور ضعيف"
+  },
+  {
+    "name": "مريم مجدي سدره",
+    "id": 24035,
+    "code": "P1823",
+    "status": "لسه",
+    "score1": 44,
+    "result1": "ناجح",
+    "score2": 45,
+    "result2": "ناجح",
+    "score3": 20,
+    "result3": "راسب"
+  },
+  {
+    "name": "دميانة شكرى جرجس",
+    "id": 24036,
+    "code": "P6308",
+    "status": "لسه",
+    "score1": 0,
+    "result1": "راسب",
+    "score2": 0,
+    "result2": "راسب",
+    "score3": 0,
+    "result3": "راسب"
+  },
+  {
+    "name": "مريم ماهر يوسف",
+    "id": 24037,
+    "code": "P4712",
+    "status": "لسه",
+    "score1": 44,
+    "result1": "ناجح",
+    "score2": 45,
+    "result2": "ناجح",
+    "score3": 44,
+    "result3": "ناجح"
+  },
+  {
+    "name": "فيولا منير",
+    "id": 24038,
+    "code": "P8059",
+    "status": "لسه",
+    "score1": 7,
+    "result1": "راسب",
+    "score2": 7,
+    "result2": "راسب",
+    "score3": 0,
+    "result3": "راسب"
+  },
+  {
+    "name": "يؤانا ماهر عياد",
+    "id": 24039,
+    "code": "P3906",
+    "status": "لسه",
+    "score1": 0,
+    "result1": "راسب",
+    "score2": 0,
+    "result2": "راسب",
+    "score3": 33,
+    "result3": "حضور ضعيف"
+  }
 
 
-
-];
-
+    ];
+        
+        
         function searchStudent() {
             let inputId = document.getElementById("studentId").value;
-            let inputCode = document.getElementById("studentCode").value;
+            let inputCode = document.getElementById("myInput").value;
             let student;
 
             if (inputCode === "OOOO") {
@@ -258,7 +800,7 @@
             }
 
             if (student) {
-                document.getElementById("studentName").innerText = "الطالب: " + student.name;
+                document.getElementById("studentName").innerText = "الأسم: " + student.name;
                 document.getElementById("studentStatus").innerText = "التذكية: " + student.status;
 
                 if (student.status !== "تمام" && inputCode !== "OOOO") {
@@ -267,13 +809,9 @@
                     return;
                 }
 
-                // عرض النتيجة في كل الحالات عند إدخال "OOOO" أو إذا كانت الحالة "تمام"
                 document.getElementById("statusMessage").innerText = "";
                 document.getElementById("resultTable").style.display = "block";
 
-              
-
-                
                 let tableBody = document.getElementById("gradesTable");
                 tableBody.innerHTML = "";
 
@@ -283,11 +821,9 @@
                     { name: "أنماط الشخصية", score: student.score3, result: student.result3 }
                 ];
 
-
                 subjects.forEach(subject => {
                     let row = document.createElement("tr");
-                    
-                    // تحديد لون الصف بناءً على النتيجة
+
                     if (subject.result === "حضور ضعيف") {
                         row.classList.add("weak-attendance");
                     } else if (subject.result === "تحريري ضعيف") {
@@ -298,7 +834,6 @@
                         row.classList.add("pass");
                     }
 
-                    // إضافة إيموجي ❤️💯 للناجحين
                     let resultText = subject.result === "ناجح" ? subject.result + " ❤️💯" : subject.result;
 
                     row.innerHTML = `
@@ -318,4 +853,8 @@
     </script>
 
 </body>
+
 </html>
+
+
+    
