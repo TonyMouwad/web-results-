@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتيجة الطالب</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            direction: rtl;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding-right: 40px;
+        }
+
+        .toggle-icon {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .toggle-icon img {
+            width: 100%;
+            height: 100%;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+
+        .toggle-icon img:hover {
+            filter: grayscale(0%);
+        }
+
+        button {
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #studentName {
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+            margin-top: 20px;
+        }
+
+        #studentStatus {
+            font-size: 18px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #007BFF;
+            color: white;
+        }
+
+        .weak-attendance {
+            background-color: #ADD8E6;
+        }
+
+        .weak-exam {
+            background-color: #f7cb91;
+        }
+
+        .fail {
+            background-color: #f9ada3;
+        }
+
+        .pass {
+            background-color: #c9f8d4;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+
+            input,
+            button {
+                font-size: 14px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <img src="habib gerges.jpg" sizes="width=50%" style="width: 80%; height: 50%;">
+        <h4>+++++++++++++++++++++</h4><br>
+        <h2>نتيجة الترم الاول فصل اعداد خدام</h2>
+        <h4>+++++++++++++++++++++</h4>
+        <br><br>
+
+        <div class="input-group">
+            <input type="number" id="studentId" placeholder=" أدخل الـ ID">
+
+            <div class="password-wrapper">
+                <input type="password" id="myInput" placeholder="أدخل الكود">
+                <div class="toggle-icon" onclick="togglePassword()">
+                    <img id="eyeIcon" src="https://cdn-icons-png.flaticon.com/512/565/565655.png" alt="Show/Hide">
+                </div>
+            </div>
+
+            <button onclick="searchStudent()">بحث</button>
+        </div>
+
+        <h2 id="studentName"></h2>
+        <h3 id="studentStatus"></h3>
+        <p id="statusMessage" style="color: red; font-weight: bold;"></p>
+
+        <table id="resultTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>المادة</th>
+                    <th>الدرجة</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody id="gradesTable"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // زر إظهار / إخفاء كلمة المرور
+        function togglePassword() {
+            const input = document.getElementById("myInput");
+            const icon = document.getElementById("eyeIcon");
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.src = "https://cdn-icons-png.flaticon.com/512/709/709612.png"; // open eye
+            } else {
+                input.type = "password";
+                icon.src = "https://cdn-icons-png.flaticon.com/512/565/565655.png"; // closed eye
+            }
+        }
+
+
+
+        // بيانات افتراضية للطلاب للتجربة
+        let students = [
+        {"name": "ابانوب اكرم غالى", "id": 25001, "national_id": "201274491319", "code": "P1283", "status": "تمام", "score1": 20, "result1": "راسب", "score2": 10, "result2": "راسب", "score3": 7, "result3": "راسب"},
+{"name": "ابانوب عماد موسي", "id": 25002, "national_id": "201288225036", "code": "P4509", "status": "تمام", "score1": 40, "result1": "ناجح", "score2": 46, "result2": "ناجح", "score3": 31, "result3": "ناجح"},
+{"name": "اسطفانوس روماني عزمي", "id": 25003, "national_id": "201271322023", "code": "P9082", "status": "تمام", "score1": 12, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "اندرو عبدالمسيح غطاس", "id": 25004, "national_id": "201275226767", "code": "P5193", "status": "تمام", "score1": 33, "result1": "ناجح", "score2": 42, "result2": "ناجح", "score3": 34, "result3": "تحريرى ضعيف"},
+{"name": "اندرو محروس مرزوق", "id": 25005, "national_id": "201228166385", "code": "P6728", "status": "تمام", "score1": 18, "result1": "تحريرى ضعيف", "score2": 21, "result2": "تحريرى ضعيف", "score3": 5, "result3": "راسب"},
+{"name": "ايريني اشرف جرجس كامل", "id": 25006, "national_id": "201288199329", "code": "P4738", "status": "تمام", "score1": 47, "result1": "ناجح", "score2": 56, "result2": "ناجح", "score3": 34, "result3": "تحريرى ضعيف"},
+{"name": "بولا روماني عزمي", "id": 25007, "national_id": "201223602271", "code": "P5786", "status": "تمام", "score1": 13, "result1": "راسب", "score2": 10, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "بولس ممدوح فوزي", "id": 25008, "national_id": "201229955175", "code": "P2409", "status": "تمام", "score1": 23, "result1": "تحريرى ضعيف", "score2": 44, "result2": "ناجح", "score3": 36, "result3": "ناجح"},
+{"name": "بيشوي جميل بدري", "id": 25009, "national_id": "201272881970", "code": "P3865", "status": "تمام", "score1": 38, "result1": "ناجح", "score2": 39, "result2": "ناجح", "score3": 33, "result3": "تحريرى ضعيف"},
+{"name": "توماس جرجس عزيز", "id": 25010, "national_id": "201271226997", "code": "P1478", "status": "تمام", "score1": 34, "result1": "ناجح", "score2": 43, "result2": "ناجح", "score3": 11, "result3": "راسب"},
+{"name": "توماس هشام بدر", "id": 25011, "national_id": "201274865896", "code": "P3705", "status": "تمام", "score1": 43, "result1": "ناجح", "score2": 50, "result2": "ناجح", "score3": 18, "result3": "راسب"},
+{"name": "جاسيكا هاني شحات", "id": 25012, "national_id": "201275346096", "code": "P9146", "status": "تمام", "score1": 31, "result1": "حضور ضعيف", "score2": 25, "result2": "حضور ضعيف", "score3": 8, "result3": "راسب"},
+{"name": "جاكلين نبيل صبحي", "id": 25013, "national_id": "201208892600", "code": "P6317", "status": "تمام", "score1": 26, "result1": "تحريرى ضعيف", "score2": 38, "result2": "ناجح", "score3": 33, "result3": "ناجح"},
+{"name": "جرجس اسامة اسكندر", "id": 25014, "national_id": "201115126053", "code": "P3182", "status": "تمام", "score1": 30, "result1": "ناجح", "score2": 34, "result2": "ناجح", "score3": 12, "result3": "تحريرى ضعيف"},
+{"name": "جورج بيشوى صبحي", "id": 25015, "national_id": "201220597557", "code": "P7463", "status": "تمام", "score1": 18, "result1": "تحريرى ضعيف", "score2": 43, "result2": "ناجح", "score3": 13, "result3": "تحريرى ضعيف"},
+{"name": "جورج توفيق نبيل", "id": 25016, "national_id": "201206728937", "code": "P5720", "status": "تمام", "score1": 34, "result1": "ناجح", "score2": 33, "result2": "تحريرى ضعيف", "score3": 7, "result3": "راسب"},
+{"name": "جومانة ميلاد نبيل", "id": 25017, "national_id": "201212431734", "code": "P7396", "status": "تمام", "score1": 5, "result1": "راسب", "score2": 7, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "جون جاد وهيب", "id": 25018, "national_id": "201222861887", "code": "P8450", "status": "تمام", "score1": 44, "result1": "ناجح", "score2": 40, "result2": "تحريرى ضعيف", "score3": 14, "result3": "تحريرى ضعيف"},
+{"name": "دميانة اسامة لويس سليم", "id": 25019, "national_id": "201276968986", "code": "P8029", "status": "تمام", "score1": 17, "result1": "تحريرى ضعيف", "score2": 19, "result2": "تحريرى ضعيف", "score3": 3, "result3": "راسب"},
+{"name": "دميانة عماد وصفى عوض", "id": 25020, "national_id": "201202661497", "code": "P7430", "status": "تمام", "score1": 4, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 5, "result3": "راسب"},
+{"name": "ساندرا عزمي عزت", "id": 25021, "national_id": "201278963635", "code": "P6298", "status": "تمام", "score1": 53, "result1": "ناجح", "score2": 51, "result2": "ناجح", "score3": 40, "result3": "تحريرى ضعيف"},
+{"name": "ساندرا فادي فتحي", "id": 25022, "national_id": "201220682880", "code": "P7045", "status": "تمام", "score1": 50, "result1": "ناجح", "score2": 54, "result2": "ناجح", "score3": 37, "result3": "تحريرى ضعيف"},
+{"name": "سلفيا سامح نبيل جورج", "id": 25023, "national_id": "201287768860", "code": "P8649", "status": "تمام", "score1": 3, "result1": "راسب", "score2": 4, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "سمعان اشرف فريد", "id": 25024, "national_id": "201272103199", "code": "P5230", "status": "تمام", "score1": 35, "result1": "حضور ضعيف", "score2": 35, "result2": "حضور ضعيف", "score3": 20, "result3": "تحريرى ضعيف"},
+{"name": "سيلفيا سمير صبحي حنا", "id": 25025, "national_id": "201285942121", "code": "P2743", "status": "تمام", "score1": 28, "result1": "حضور ضعيف", "score2": 32, "result2": "حضور ضعيف", "score3": 18, "result3": "تحريرى ضعيف"},
+{"name": "سيلفيا عزمي عزت", "id": 25026, "national_id": "201276977658", "code": "P5081", "status": "تمام", "score1": 51, "result1": "ناجح", "score2": 48, "result2": "ناجح", "score3": 48, "result3": "ناجح"},
+{"name": "شيري فليمون ناجح", "id": 25027, "national_id": "201226160913", "code": "P4198", "status": "تمام", "score1": 55, "result1": "ناجح", "score2": 60, "result2": "ناجح", "score3": 41, "result3": "ناجح"},
+{"name": "فادي سمير سعيد", "id": 25028, "national_id": "201270573322", "code": "P8264", "status": "تمام", "score1": 50, "result1": "ناجح", "score2": 46, "result2": "ناجح", "score3": 46, "result3": "ناجح"},
+{"name": "فيرينا اميل جورجي", "id": 25029, "national_id": "201227608917", "code": "P1623", "status": "تمام", "score1": 50, "result1": "ناجح", "score2": 44, "result2": "ناجح", "score3": 38, "result3": "حضور ضعيف"},
+{"name": "فيرينا سامح يوحنا", "id": 25030, "national_id": "201227776360", "code": "P3498", "status": "تمام", "score1": 19, "result1": "راسب", "score2": 7, "result2": "راسب", "score3": 7, "result3": "راسب"},
+{"name": "كاترين عماد ملاك", "id": 25031, "national_id": "201274488100", "code": "P6342", "status": "تمام", "score1": 42, "result1": "ناجح", "score2": 45, "result2": "ناجح", "score3": 21, "result3": "راسب"},
+{"name": "كرستينا أشرف فهيم", "id": 25032, "national_id": "201204883964", "code": "P3041", "status": "تمام", "score1": 28, "result1": "تحريرى ضعيف", "score2": 52, "result2": "ناجح", "score3": 44, "result3": "ناجح"},
+{"name": "كيرلس عادل جاد", "id": 25033, "national_id": "201202363869", "code": "P2308", "status": "تمام", "score1": 18, "result1": "تحريرى ضعيف", "score2": 48, "result2": "ناجح", "score3": 38, "result3": "ناجح"},
+{"name": "كيرلس ناصر راضي", "id": 25034, "national_id": "201090263369", "code": "P7023", "status": "تمام", "score1": 41, "result1": "ناجح", "score2": 37, "result2": "ناجح", "score3": 38, "result3": "تحريرى ضعيف"},
+{"name": "ماتيلدا ممدوح سامي", "id": 25035, "national_id": "201287517698", "code": "P5762", "status": "تمام", "score1": 4, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مارتينا نصري بخيت يسي", "id": 25036, "national_id": "201220582684", "code": "P6851", "status": "تمام", "score1": 41, "result1": "ناجح", "score2": 43, "result2": "ناجح", "score3": 20, "result3": "تحريرى ضعيف"},
+{"name": "مارتينا هانى فهمي", "id": 25037, "national_id": "201274071354", "code": "P7036", "status": "تمام", "score1": 10, "result1": "تحريرى ضعيف", "score2": 16, "result2": "تحريرى ضعيف", "score3": 4, "result3": "راسب"},
+{"name": "مارتينا وليد كامل", "id": 25038, "national_id": "201221585259", "code": "P5980", "status": "تمام", "score1": 31, "result1": "ناجح", "score2": 43, "result2": "ناجح", "score3": 10, "result3": "تحريرى ضعيف"},
+{"name": "ماريا بطرس ثابت", "id": 25039, "national_id": "201206685456", "code": "P2518", "status": "تمام", "score1": 57, "result1": "ناجح", "score2": 57, "result2": "ناجح", "score3": 56, "result3": "ناجح"},
+{"name": "ماريا مجدي بشري", "id": 25040, "national_id": "201206697634", "code": "P9042", "status": "تمام", "score1": 23, "result1": "تحريرى ضعيف", "score2": 28, "result2": "تحريرى ضعيف", "score3": 10, "result3": "راسب"},
+{"name": "ماريا ناجي وديع", "id": 25041, "national_id": "201280063518", "code": "P3176", "status": "تمام", "score1": 49, "result1": "ناجح", "score2": 42, "result2": "ناجح", "score3": 44, "result3": "ناجح"},
+{"name": "ماريان عادل عريان جيد", "id": 25042, "national_id": "201273446219", "code": "P5894", "status": "تمام", "score1": 38, "result1": "حضور ضعيف", "score2": 37, "result2": "حضور ضعيف", "score3": 12, "result3": "راسب"},
+{"name": "مارينا سامح ملاك عطية", "id": 25043, "national_id": "201272476160", "code": "P4170", "status": "تمام", "score1": 48, "result1": "ناجح", "score2": 48, "result2": "ناجح", "score3": 28, "result3": "راسب"},
+{"name": "مارينا سمير سليمان جرجس", "id": 25044, "national_id": "201277903309", "code": "P7483", "status": "تمام", "score1": 39, "result1": "ناجح", "score2": 20, "result2": "تحريرى ضعيف", "score3": 0, "result3": "راسب"},
+{"name": "مارينا صبري متري", "id": 25045, "national_id": "201275699772", "code": "P5106", "status": "تمام", "score1": 43, "result1": "ناجح", "score2": 23, "result2": "تحريرى ضعيف", "score3": 13, "result3": "راسب"},
+{"name": "مارينا كمال فهمي", "id": 25046, "national_id": "201275368643", "code": "P2954", "status": "تمام", "score1": 42, "result1": "ناجح", "score2": 36, "result2": "ناجح", "score3": 16, "result3": "تحريرى ضعيف"},
+{"name": "مايكل جرجس وصفي", "id": 25047, "national_id": "201229678186", "code": "P1632", "status": "تمام", "score1": 19, "result1": "تحريرى ضعيف", "score2": 33, "result2": "ناجح", "score3": 34, "result3": "تحريرى ضعيف"},
+{"name": "مايكل كمال فهمي", "id": 25048, "national_id": "201223752772", "code": "P6048", "status": "تمام", "score1": 35, "result1": "ناجح", "score2": 32, "result2": "تحريرى ضعيف", "score3": 18, "result3": "تحريرى ضعيف"},
+{"name": "مريم عادل منير جرجس", "id": 25049, "national_id": "201554634707", "code": "P6098", "status": "تمام", "score1": 48, "result1": "ناجح", "score2": 48, "result2": "ناجح", "score3": 46, "result3": "ناجح"},
+{"name": "ملاك ميخائيل غطاس", "id": 25050, "national_id": "201021746686", "code": "P2603", "status": "تمام", "score1": 46, "result1": "ناجح", "score2": 40, "result2": "ناجح", "score3": 25, "result3": "تحريرى ضعيف"},
+{"name": "مهرائيل عادل منير", "id": 25051, "national_id": "201554634708", "code": "P8027", "status": "تمام", "score1": 49, "result1": "ناجح", "score2": 50, "result2": "ناجح", "score3": 50, "result3": "ناجح"},
+{"name": "ميرا موريس ناجح", "id": 25052, "national_id": "201203463307", "code": "P9416", "status": "تمام", "score1": 35, "result1": "ناجح", "score2": 40, "result2": "ناجح", "score3": 21, "result3": "تحريرى ضعيف"},
+{"name": "ميرام رامي صبحي صادق", "id": 25053, "national_id": "201225039993", "code": "P5239", "status": "تمام", "score1": 52, "result1": "ناجح", "score2": 50, "result2": "ناجح", "score3": 45, "result3": "ناجح"},
+{"name": "ميرنا مرقس أيوب", "id": 25054, "national_id": "201228861975", "code": "P1347", "status": "تمام", "score1": 37, "result1": "ناجح", "score2": 39, "result2": "ناجح", "score3": 18, "result3": "تحريرى ضعيف"},
+{"name": "ميرولا اشرف الفونس", "id": 25055, "national_id": "201212455229", "code": "P9610", "status": "تمام", "score1": 27, "result1": "حضور ضعيف", "score2": 19, "result2": "راسب", "score3": 14, "result3": "تحريرى ضعيف"},
+{"name": "ميرولا حنا رشدي", "id": 25056, "national_id": "201210308749", "code": "P8753", "status": "تمام", "score1": 37, "result1": "ناجح", "score2": 24, "result2": "تحريرى ضعيف", "score3": 15, "result3": "تحريرى ضعيف"},
+{"name": "مينا رضا صالح", "id": 25057, "national_id": "201289715698", "code": "P6028", "status": "تمام", "score1": 22, "result1": "راسب", "score2": 32, "result2": "حضور ضعيف", "score3": 25, "result3": "تحريرى ضعيف"},
+{"name": "مينا منير غطاس", "id": 25058, "national_id": "201222320497", "code": "P7613", "status": "تمام", "score1": 33, "result1": "حضور ضعيف", "score2": 26, "result2": "حضور ضعيف", "score3": 10, "result3": "راسب"},
+{"name": "مينا وجيه عطية", "id": 25059, "national_id": "201279268898", "code": "P5092", "status": "تمام", "score1": 8, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "نورهان راضي حكيم", "id": 25060, "national_id": "201270675951", "code": "P4729", "status": "تمام", "score1": 44, "result1": "حضور ضعيف", "score2": 44, "result2": "حضور ضعيف", "score3": 12, "result3": "راسب"},
+{"name": "هناء فزيع فرج خليل", "id": 25061, "national_id": "201273409414", "code": "P8490", "status": "تمام", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 8, "result3": "راسب"},
+{"name": "هيلانا جرجس ذكري", "id": 25062, "national_id": "201274956471", "code": "P3708", "status": "تمام", "score1": 36, "result1": "حضور ضعيف", "score2": 6, "result2": "راسب", "score3": 14, "result3": "راسب"},
+{"name": "يؤانا ايمن رشدي", "id": 25063, "national_id": "201203715638", "code": "P6947", "status": "تمام", "score1": 50, "result1": "ناجح", "score2": 46, "result2": "ناجح", "score3": 45, "result3": "ناجح"},
+{"name": "يؤانا سمير بدري", "id": 25064, "national_id": "201274140990", "code": "P2035", "status": "تمام", "score1": 46, "result1": "ناجح", "score2": 44, "result2": "ناجح", "score3": 45, "result3": "ناجح"},
+{"name": "مينا سمير لويز", "id": 25065, "national_id": "00000000000", "code": "P7345", "status": "تمام", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 5, "result3": "راسب"},
+{"name": "يؤانا نسيم اسكندر", "id": 25066, "national_id": "201274439547", "code": "P5271", "status": "تمام", "score1": 51, "result1": "ناجح", "score2": 47, "result2": "ناجح", "score3": 56, "result3": "ناجح"},
+{"name": "يؤانا مجدي خليل زكي", "id": 25067, "national_id": "201226405887", "code": "P6184", "status": "تمام", "score1": 42, "result1": "ناجح", "score2": 41, "result2": "ناجح", "score3": 25, "result3": "تحريرى ضعيف"},
+{"name": "يوستينا سامح ابراهيم", "id": 25068, "national_id": "201271824284", "code": "P9820", "status": "تمام", "score1": 23, "result1": "حضور ضعيف", "score2": 6, "result2": "راسب", "score3": 8, "result3": "راسب"},
+{"name": "يوسف وسام ابراهيم", "id": 25069, "national_id": "201288224301", "code": "P1039", "status": "تمام", "score1": 32, "result1": "حضور ضعيف", "score2": 33, "result2": "حضور ضعيف", "score3": 21, "result3": "تحريرى ضعيف"},
+{"name": "يوسي سرور سعيد وهبة", "id": 25070, "national_id": "201221605479", "code": "P8462", "status": "تمام", "score1": 37, "result1": "ناجح", "score2": 21, "result2": "تحريرى ضعيف", "score3": 18, "result3": "راسب"},
+{"name": "ابانوب جرجس عبدالكريم", "id": 25071, "national_id": "201201289573", "code": "P3756", "status": "تمام", "score1": 38, "result1": "حضور ضعيف", "score2": 36, "result2": "حضور ضعيف", "score3": 30, "result3": "تحريرى ضعيف"},
+{"name": "ابانوب عزمى", "id": 25072, "national_id": "201288575635", "code": "P8210", "status": "تمام", "score1": 5, "result1": "راسب", "score2": 7, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "اندرو يوسف", "id": 25073, "national_id": "00000000000", "code": "P8350", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "انطونيوس سامح زكريا", "id": 25074, "national_id": "201229308827", "code": "P2946", "status": "تمام", "score1": 38, "result1": "ناجح", "score2": 19, "result2": "تحريرى ضعيف", "score3": 26, "result3": "تحريرى ضعيف"},
+{"name": "ايريني اشرف فهيم", "id": 25075, "national_id": "201278793699", "code": "P9051", "status": "تمام", "score1": 37, "result1": "حضور ضعيف", "score2": 20, "result2": "حضور ضعيف", "score3": 28, "result3": "راسب"},
+{"name": "ايلاريا روماني شفيق", "id": 25076, "national_id": "201143544628", "code": "P5206", "status": "تمام", "score1": 12, "result1": "تحريرى ضعيف", "score2": 18, "result2": "تحريرى ضعيف", "score3": 5, "result3": "راسب"},
+{"name": "بطرس عجبان بطرس", "id": 25077, "national_id": "201203154056", "code": "P6471", "status": "تمام", "score1": 48, "result1": "ناجح", "score2": 42, "result2": "ناجح", "score3": 34, "result3": "ناجح"},
+{"name": "بيشوي رؤوف سمير كامل", "id": 25078, "national_id": "201289993816", "code": "P7904", "status": "تمام", "score1": 38, "result1": "ناجح", "score2": 27, "result2": "تحريرى ضعيف", "score3": 6, "result3": "راسب"},
+{"name": "بيشوي عطا نجيب", "id": 25079, "national_id": "201284102878", "code": "P5283", "status": "تمام", "score1": 41, "result1": "حضور ضعيف", "score2": 41, "result2": "حضور ضعيف", "score3": 21, "result3": "راسب"},
+{"name": "توماس حنا فتحي", "id": 25080, "national_id": "201280259945", "code": "P3569", "status": "لسه", "score1": 29, "result1": "ناجح", "score2": 31, "result2": "تحريرى ضعيف", "score3": 19, "result3": "راسب"},
+{"name": "توماس عزت", "id": 25081, "national_id": "00000000000", "code": "P4082", "status": "لسه", "score1": 27, "result1": "ناجح", "score2": 18, "result2": "تحريرى ضعيف", "score3": 3, "result3": "راسب"},
+{"name": "جرجس رأفت صبري فوزي", "id": 25082, "national_id": "201285391757", "code": "P6574", "status": "تمام", "score1": 50, "result1": "ناجح", "score2": 47, "result2": "ناجح", "score3": 47, "result3": "ناجح"},
+{"name": "جوليانا رأفت نجيب", "id": 25083, "national_id": "201277321636", "code": "P1248", "status": "تمام", "score1": 39, "result1": "ناجح", "score2": 23, "result2": "تحريرى ضعيف", "score3": 13, "result3": "تحريرى ضعيف"},
+{"name": "داليا ممدوح فوزي فهيم", "id": 25084, "national_id": "201274814673", "code": "P1375", "status": "تمام", "score1": 16, "result1": "راسب", "score2": 14, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "راندا عصام هرني", "id": 25085, "national_id": "201006253053", "code": "P2084", "status": "تمام", "score1": 7, "result1": "راسب", "score2": 31, "result2": "حضور ضعيف", "score3": 11, "result3": "راسب"},
+{"name": "0", "id": 25086, "national_id": "00000000000", "code": "P3597", "status": "تمام", "score1": 4, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ريهام رمزي فهمي", "id": 25087, "national_id": "201281518876", "code": "P8106", "status": "تمام", "score1": 43, "result1": "ناجح", "score2": 41, "result2": "ناجح", "score3": 41, "result3": "تحريرى ضعيف"},
+{"name": "ساندرا سامي", "id": 25088, "national_id": "201201250173", "code": "P9750", "status": "تمام", "score1": 33, "result1": "حضور ضعيف", "score2": 13, "result2": "راسب", "score3": 2, "result3": "راسب"},
+{"name": "ساندرا سمير صبحي", "id": 25089, "national_id": "201271002869", "code": "P1342", "status": "تمام", "score1": 37, "result1": "حضور ضعيف", "score2": 39, "result2": "حضور ضعيف", "score3": 17, "result3": "راسب"},
+{"name": "ساندرا نصر فهمي", "id": 25090, "national_id": "201225973567", "code": "P3127", "status": "تمام", "score1": 15, "result1": "تحريرى ضعيف", "score2": 22, "result2": "تحريرى ضعيف", "score3": 3, "result3": "راسب"},
+{"name": "سوسنا ايهاب وصفى عزمي", "id": 25091, "national_id": "201277384465", "code": "P6918", "status": "تمام", "score1": 38, "result1": "ناجح", "score2": 41, "result2": "ناجح", "score3": 14, "result3": "تحريرى ضعيف"},
+{"name": "فيرونيا وليد كامل بقطر", "id": 25092, "national_id": "201272078079", "code": "P9075", "status": "تمام", "score1": 36, "result1": "ناجح", "score2": 29, "result2": "تحريرى ضعيف", "score3": 10, "result3": "راسب"},
+{"name": "كاترين ايهاب ماهر زاخر", "id": 25093, "national_id": "201286908692", "code": "P8927", "status": "تمام", "score1": 50, "result1": "ناجح", "score2": 52, "result2": "ناجح", "score3": 34, "result3": "تحريرى ضعيف"},
+{"name": "كرستين وجدي ناشد", "id": 25094, "national_id": "201228072322", "code": "P9283", "status": "تمام", "score1": 37, "result1": "حضور ضعيف", "score2": 31, "result2": "حضور ضعيف", "score3": 40, "result3": "ناجح"},
+{"name": "كلارا رضا صالح بخيت", "id": 25095, "national_id": "201273178621", "code": "P7620", "status": "تمام", "score1": 44, "result1": "حضور ضعيف", "score2": 32, "result2": "حضور ضعيف", "score3": 31, "result3": "تحريرى ضعيف"},
+{"name": "كيرلس اشرف سمير", "id": 25096, "national_id": "201276764154", "code": "P5108", "status": "تمام", "score1": 30, "result1": "حضور ضعيف", "score2": 11, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "كيرلس حازم ثابت", "id": 25097, "national_id": "201275920201", "code": "P6732", "status": "تمام", "score1": 36, "result1": "حضور ضعيف", "score2": 25, "result2": "راسب", "score3": 12, "result3": "راسب"},
+{"name": "كيرلس شنودة صبري", "id": 25098, "national_id": "201097029864", "code": "P4902", "status": "تمام", "score1": 12, "result1": "راسب", "score2": 25, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "كيرلس ظريف صبحي", "id": 25099, "national_id": "201279927454", "code": "P7841", "status": "لسه", "score1": 40, "result1": "ناجح", "score2": 40, "result2": "ناجح", "score3": 14, "result3": "راسب"},
+{"name": "مادونا فتحي زاهر", "id": 25100, "national_id": "201203826643", "code": "P9604", "status": "تمام", "score1": 32, "result1": "ناجح", "score2": 45, "result2": "ناجح", "score3": 56, "result3": "ناجح"},
+{"name": "مارتينا نصر زغلول", "id": 25101, "national_id": "201271363411", "code": "P5048", "status": "تمام", "score1": 45, "result1": "ناجح", "score2": 50, "result2": "ناجح", "score3": 38, "result3": "تحريرى ضعيف"},
+{"name": "ماركو القمص انطون بسطة", "id": 25103, "national_id": "201223556403", "code": "P1963", "status": "لسه", "score1": 13, "result1": "تحريرى ضعيف", "score2": 37, "result2": "ناجح", "score3": 37, "result3": "ناجح"},
+{"name": "ماريان ناثان بحر رزق", "id": 25104, "national_id": "201270333562", "code": "P6423", "status": "تمام", "score1": 37, "result1": "ناجح", "score2": 20, "result2": "تحريرى ضعيف", "score3": 30, "result3": "تحريرى ضعيف"},
+{"name": "مارينا اشرف فهيم", "id": 25105, "national_id": "201272078774", "code": "P5618", "status": "تمام", "score1": 42, "result1": "ناجح", "score2": 42, "result2": "ناجح", "score3": 34, "result3": "تحريرى ضعيف"},
+{"name": "مارينا رؤوف سمير كامل", "id": 25106, "national_id": "201201515319", "code": "P9325", "status": "تمام", "score1": 4, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ماريو ميلاد اسحاق", "id": 25107, "national_id": "201555811974", "code": "P6829", "status": "تمام", "score1": 35, "result1": "ناجح", "score2": 36, "result2": "ناجح", "score3": 40, "result3": "تحريرى ضعيف"},
+{"name": "مايكل سامي سمير", "id": 25108, "national_id": "201212161572", "code": "P8795", "status": "لسه", "score1": 18, "result1": "حضور ضعيف", "score2": 28, "result2": "حضور ضعيف", "score3": 5, "result3": "راسب"},
+{"name": "مريام رأفت داود", "id": 25109, "national_id": "201289698810", "code": "P3186", "status": "تمام", "score1": 38, "result1": "حضور ضعيف", "score2": 34, "result2": "حضور ضعيف", "score3": 17, "result3": "تحريرى ضعيف"},
+{"name": "مريم اميل طويلة", "id": 25110, "national_id": "201224119907", "code": "P8465", "status": "تمام", "score1": 43, "result1": "ناجح", "score2": 43, "result2": "ناجح", "score3": 26, "result3": "تحريرى ضعيف"},
+{"name": "مريم مقار القس يعقوب موسي", "id": 25111, "national_id": "201200962348", "code": "P8934", "status": "تمام", "score1": 38, "result1": "حضور ضعيف", "score2": 34, "result2": "حضور ضعيف", "score3": 22, "result3": "تحريرى ضعيف"},
+{"name": "مريم يوسف ثابت", "id": 25112, "national_id": "201228713524", "code": "P7105", "status": "تمام", "score1": 26, "result1": "حضور ضعيف", "score2": 16, "result2": "راسب", "score3": 23, "result3": "راسب"},
+{"name": "ميرنا عماد عطية", "id": 25113, "national_id": "201289970235", "code": "P8294", "status": "تمام", "score1": 44, "result1": "ناجح", "score2": 40, "result2": "ناجح", "score3": 38, "result3": "تحريرى ضعيف"},
+{"name": "مينا يوسف وليم يوسف", "id": 25114, "national_id": "201271226335", "code": "P4368", "status": "تمام", "score1": 45, "result1": "ناجح", "score2": 42, "result2": "ناجح", "score3": 41, "result3": "تحريرى ضعيف"},
+{"name": "هايدي وليد عزت", "id": 25115, "national_id": "201281221866", "code": "P4716", "status": "تمام", "score1": 34, "result1": "حضور ضعيف", "score2": 36, "result2": "حضور ضعيف", "score3": 5, "result3": "راسب"},
+{"name": "يؤانا عماد ملاك", "id": 25116, "national_id": "201273423265", "code": "P4791", "status": "لسه", "score1": 34, "result1": "حضور ضعيف", "score2": 26, "result2": "حضور ضعيف", "score3": 10, "result3": "راسب"},
+{"name": "يوستينا عزت ابراهيم يوسف", "id": 25117, "national_id": "201204867497", "code": "P6752", "status": "تمام", "score1": 22, "result1": "حضور ضعيف", "score2": 0, "result2": "راسب", "score3": 5, "result3": "راسب"},
+{"name": "مايكل عماد رمزي", "id": 25118, "national_id": "201285250776", "code": "P4721", "status": "لسه", "score1": 44, "result1": "ناجح", "score2": 42, "result2": "ناجح", "score3": 18, "result3": "تحريرى ضعيف"},
+{"name": "فيولا سامح منصور نصر", "id": 25119, "national_id": "201228217609", "code": "P4701", "status": "تمام", "score1": 8, "result1": "راسب", "score2": 33, "result2": "حضور ضعيف", "score3": 3, "result3": "راسب"},
+{"name": "جوفاني القس برسوم سامي", "id": 25120, "national_id": "201124858063", "code": "P9673", "status": "تمام", "score1": 36, "result1": "ناجح", "score2": 47, "result2": "ناجح", "score3": 44, "result3": "ناجح"},
+{"name": "ميرنا عاطف خليل", "id": 25121, "national_id": "201211657633", "code": "P4076", "status": "تمام", "score1": 14, "result1": "تحريرى ضعيف", "score2": 44, "result2": "ناجح", "score3": 10, "result3": "راسب"},
+{"name": "ماريز عاطف خلف وهبه", "id": 25122, "national_id": "201224061137", "code": "P8750", "status": "تمام", "score1": 44, "result1": "ناجح", "score2": 36, "result2": "ناجح", "score3": 29, "result3": "تحريرى ضعيف"},
+{"name": "رامي فرج مليكة", "id": 25123, "national_id": "201211545613", "code": "P4195", "status": "تمام", "score1": 50, "result1": "ناجح", "score2": 54, "result2": "ناجح", "score3": 52, "result3": "ناجح"},
+{"name": "ميرنا اسامة خيري", "id": 25124, "national_id": "201280062459", "code": "P7650", "status": "لسه", "score1": 28, "result1": "حضور ضعيف", "score2": 42, "result2": "حضور ضعيف", "score3": 20, "result3": "تحريرى ضعيف"},
+{"name": "يؤانا مدحت يسري", "id": 25125, "national_id": "201211858525", "code": "P7920", "status": "لسه", "score1": 5, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 5, "result3": "راسب"},
+{"name": "جومانا نادر سمير", "id": 25126, "national_id": "201222376319", "code": "P6051", "status": "تمام", "score1": 46, "result1": "ناجح", "score2": 43, "result2": "ناجح", "score3": 39, "result3": "ناجح"},
+{"name": "كيرلس حنا فوزي", "id": 25127, "national_id": "201279937067", "code": "P8921", "status": "تمام", "score1": 24, "result1": "حضور ضعيف", "score2": 25, "result2": "حضور ضعيف", "score3": 7, "result3": "راسب"},
+{"name": "بيشوي ملاك فوزي", "id": 25128, "national_id": "201288225134", "code": "P9620", "status": "لسه", "score1": 3, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "هايدي امجد ونيس", "id": 25129, "national_id": "201276391933", "code": "P6852", "status": "تمام", "score1": 32, "result1": "حضور ضعيف", "score2": 34, "result2": "حضور ضعيف", "score3": 11, "result3": "تحريرى ضعيف"},
+{"name": "جورجيت نعيم شحاتة", "id": 25130, "national_id": "201283469183", "code": "P8052", "status": "لسه", "score1": 35, "result1": "حضور ضعيف", "score2": 38, "result2": "حضور ضعيف", "score3": 17, "result3": "تحريرى ضعيف"},
+{"name": "روفينا يوسف وليم يوسف", "id": 25131, "national_id": "201222921104", "code": "P7643", "status": "تمام", "score1": 53, "result1": "ناجح", "score2": 52, "result2": "ناجح", "score3": 35, "result3": "ناجح"},
+{"name": "كيرلس أشرف صبحي", "id": 25132, "national_id": "201221277724", "code": "P9405", "status": "لسه", "score1": 30, "result1": "حضور ضعيف", "score2": 40, "result2": "حضور ضعيف", "score3": 18, "result3": "تحريرى ضعيف"},
+{"name": "اندرو امجد ونيس", "id": 25133, "national_id": "201229485587", "code": "P2840", "status": "لسه", "score1": 29, "result1": "ناجح", "score2": 16, "result2": "تحريرى ضعيف", "score3": 3, "result3": "راسب"},
+{"name": "كيرلس غطاس", "id": 25134, "national_id": "201221962930", "code": "P5429", "status": "لسه", "score1": 9, "result1": "راسب", "score2": 13, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "فيلوباتير اميل جورج", "id": 25135, "national_id": "201280075403", "code": "P2850", "status": "تمام", "score1": 21, "result1": "راسب", "score2": 5, "result2": "راسب", "score3": 28, "result3": "تحريرى ضعيف"},
+{"name": "روماني عصام عبدالله", "id": 25136, "national_id": "201275286458", "code": "P5901", "status": "لسه", "score1": 15, "result1": "تحريرى ضعيف", "score2": 46, "result2": "ناجح", "score3": 15, "result3": "تحريرى ضعيف"},
+{"name": "ايريني سمير بخيت", "id": 25137, "national_id": "201210297179", "code": "P7314", "status": "تمام", "score1": 31, "result1": "حضور ضعيف", "score2": 28, "result2": "حضور ضعيف", "score3": 32, "result3": "تحريرى ضعيف"},
+{"name": "شيرين عطا حافظ", "id": 25138, "national_id": "00000000000", "code": "P5317", "status": "لسه", "score1": 34, "result1": "حضور ضعيف", "score2": 37, "result2": "حضور ضعيف", "score3": 3, "result3": "راسب"},
+{"name": "يسى رفعت فتحى", "id": 25139, "national_id": "201272030340", "code": "P8394", "status": "تمام", "score1": 22, "result1": "حضور ضعيف", "score2": 0, "result2": "راسب", "score3": 9, "result3": "راسب"},
+{"name": "0", "id": 25140, "national_id": "00000000000", "code": "P7284", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 18, "result3": "تحريرى ضعيف"},
+{"name": "ناديه يوسف شحاته", "id": 25141, "national_id": "201210308749", "code": "P8410", "status": "لسه", "score1": 20, "result1": "حضور ضعيف", "score2": 16, "result2": "راسب", "score3": 18, "result3": "تحريرى ضعيف"},
+{"name": "ماتيلدا ممدوح سامي غطاس", "id": 25142, "national_id": "201287517698", "code": "P8497", "status": "تمام", "score1": 8, "result1": "راسب", "score2": 12, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ماريز ماجد عجيب", "id": 25143, "national_id": "201285519063", "code": "P2097", "status": "لسه", "score1": 36, "result1": "حضور ضعيف", "score2": 33, "result2": "حضور ضعيف", "score3": 36, "result3": "حضور ضعيف"},
+{"name": "ابانوب ايمن صابر", "id": 25144, "national_id": "201203869167", "code": "P9402", "status": "لسه", "score1": 24, "result1": "حضور ضعيف", "score2": 33, "result2": "حضور ضعيف", "score3": 15, "result3": "راسب"},
+{"name": "مايكل جرجس عوني", "id": 25145, "national_id": "201271989236", "code": "P9407", "status": "لسه", "score1": 23, "result1": "راسب", "score2": 31, "result2": "حضور ضعيف", "score3": 10, "result3": "راسب"},
+{"name": "سارة سعد خلة", "id": 25146, "national_id": "201204273150", "code": "P4285", "status": "تمام", "score1": 33, "result1": "ناجح", "score2": 16, "result2": "تحريرى ضعيف", "score3": 0, "result3": "راسب"},
+{"name": "كيرلس اشرف سمير", "id": 25147, "national_id": "00000000000", "code": "P2876", "status": "لسه", "score1": 9, "result1": "راسب", "score2": 39, "result2": "حضور ضعيف", "score3": 23, "result3": "تحريرى ضعيف"},
+{"name": "مادلين عطية جرجس", "id": 25149, "national_id": "201275729400", "code": "P4320", "status": "تمام", "score1": 33, "result1": "حضور ضعيف", "score2": 36, "result2": "حضور ضعيف", "score3": 18, "result3": "راسب"},
+{"name": "0", "id": 25150, "national_id": "00000000000", "code": "P7321", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "جونير حنا رشدى", "id": 25151, "national_id": "201210308749", "code": "P2913", "status": "لسه", "score1": 25, "result1": "حضور ضعيف", "score2": 22, "result2": "حضور ضعيف", "score3": 8, "result3": "راسب"},
+{"name": "ابرام مجدي نصار", "id": 25152, "national_id": "201224105741", "code": "P6475", "status": "تمام", "score1": 35, "result1": "ناجح", "score2": 26, "result2": "تحريرى ضعيف", "score3": 25, "result3": "تحريرى ضعيف"},
+{"name": "جانو سامح", "id": 25153, "national_id": "201208576962", "code": "P4028", "status": "لسه", "score1": 26, "result1": "حضور ضعيف", "score2": 6, "result2": "راسب", "score3": 1, "result3": "راسب"},
+{"name": "مادونا سعد", "id": 25154, "national_id": "201203706038", "code": "P1278", "status": "لسه", "score1": 5, "result1": "راسب", "score2": 7, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "توماس عماد", "id": 25155, "national_id": "201212492753", "code": "P2517", "status": "تمام", "score1": 6, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "اندرو السنوسي", "id": 25156, "national_id": "201203957538", "code": "P3617", "status": "لسه", "score1": 4, "result1": "راسب", "score2": 7, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مينا ماجد", "id": 25157, "national_id": "201278003329", "code": "P2984", "status": "لسه", "score1": 30, "result1": "حضور ضعيف", "score2": 8, "result2": "راسب", "score3": 11, "result3": "تحريرى ضعيف"},
+{"name": "دميانة لبيب نبيه", "id": 25158, "national_id": "201227038533", "code": "P6572", "status": "تمام", "score1": 15, "result1": "راسب", "score2": 29, "result2": "حضور ضعيف", "score3": 0, "result3": "راسب"},
+{"name": "بكينام نصر", "id": 25159, "national_id": "201200343451", "code": "P9032", "status": "لسه", "score1": 26, "result1": "حضور ضعيف", "score2": 15, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مريم عماد", "id": 25160, "national_id": "201201092520", "code": "P4291", "status": "لسه", "score1": 3, "result1": "راسب", "score2": 5, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "كيرلس عماد", "id": 25161, "national_id": "201092989372", "code": "P8130", "status": "تمام", "score1": 4, "result1": "راسب", "score2": 5, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "نانسي عزت نعيم", "id": 25162, "national_id": "201207924925", "code": "P5983", "status": "لسه", "score1": 6, "result1": "راسب", "score2": 4, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ملاك سامي عبدالملاك عطية", "id": 25163, "national_id": "201274226750", "code": "P1579", "status": "تمام", "score1": 35, "result1": "ناجح", "score2": 41, "result2": "ناجح", "score3": 26, "result3": "تحريرى ضعيف"},
+{"name": "كيرمينا نبيل", "id": 25164, "national_id": "201222745341", "code": "P3185", "status": "لسه", "score1": 5, "result1": "راسب", "score2": 7, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ايلارية عماد موسي", "id": 25165, "national_id": "201289780770", "code": "P8047", "status": "تمام", "score1": 32, "result1": "ناجح", "score2": 40, "result2": "ناجح", "score3": 23, "result3": "تحريرى ضعيف"},
+{"name": "مريم شنودة موسي", "id": 25166, "national_id": "201554627887", "code": "P5370", "status": "تمام", "score1": 36, "result1": "ناجح", "score2": 48, "result2": "ناجح", "score3": 32, "result3": "راسب"},
+{"name": "نورهان نبيل فوزي", "id": 25167, "national_id": "201229192706", "code": "P9301", "status": "تمام", "score1": 10, "result1": "راسب", "score2": 8, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ناردين خيري العريان", "id": 25168, "national_id": "201227618506", "code": "P2175", "status": "تمام", "score1": 6, "result1": "راسب", "score2": 8, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "شادى ايمن سمير", "id": 25169, "national_id": "201285734426", "code": "P6270", "status": "تمام", "score1": 35, "result1": "حضور ضعيف", "score2": 32, "result2": "حضور ضعيف", "score3": 23, "result3": "راسب"},
+{"name": "يوساب عماد نصحي", "id": 25170, "national_id": "201207697319", "code": "P6107", "status": "تمام", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مارتينا اشرف عدلي", "id": 25171, "national_id": "201278764676", "code": "P2917", "status": "لسه", "score1": 34, "result1": "حضور ضعيف", "score2": 44, "result2": "حضور ضعيف", "score3": 27, "result3": "راسب"},
+{"name": "جيهان سعيد عبده", "id": 25172, "national_id": "201286247358", "code": "P9602", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ملاك راضي حكيم", "id": 25173, "national_id": "201225178774", "code": "P6382", "status": "تمام", "score1": 34, "result1": "ناجح", "score2": 23, "result2": "تحريرى ضعيف", "score3": 17, "result3": "تحريرى ضعيف"},
+{"name": "مارثا بولس صديق", "id": 25174, "national_id": "201200789854", "code": "P3725", "status": "تمام", "score1": 17, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 23, "result3": "تحريرى ضعيف"},
+{"name": "مارفي مجدي كمال", "id": 25175, "national_id": "201272679702", "code": "P8407", "status": "تمام", "score1": 4, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 4, "result3": "راسب"},
+{"name": "مارتينا واصف موريس", "id": 25176, "national_id": "201284706204", "code": "P4129", "status": "لسه", "score1": 34, "result1": "ناجح", "score2": 38, "result2": "ناجح", "score3": 20, "result3": "تحريرى ضعيف"},
+{"name": "كيرلس رضا شفيق", "id": 25177, "national_id": "201289280717", "code": "P3567", "status": "تمام", "score1": 31, "result1": "حضور ضعيف", "score2": 18, "result2": "راسب", "score3": 6, "result3": "راسب"},
+{"name": "انطونيوس لابان فهمي", "id": 25178, "national_id": "201210369376", "code": "P1067", "status": "لسه", "score1": 28, "result1": "حضور ضعيف", "score2": 32, "result2": "حضور ضعيف", "score3": 28, "result3": "ناجح"},
+{"name": "ايريني وليد عزت", "id": 25179, "national_id": "201204865253", "code": "P3179", "status": "لسه", "score1": 30, "result1": "حضور ضعيف", "score2": 37, "result2": "حضور ضعيف", "score3": 23, "result3": "راسب"},
+{"name": "0", "id": 25180, "national_id": "00000000000", "code": "P5129", "status": "لسه", "score1": 4, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مارينا عزت عبد الفادى", "id": 25181, "national_id": "201271905771", "code": "P8031", "status": "لسه", "score1": 33, "result1": "حضور ضعيف", "score2": 31, "result2": "حضور ضعيف", "score3": 24, "result3": "راسب"},
+{"name": "ايريني عادل جميل", "id": 25182, "national_id": "201228229647", "code": "P6820", "status": "لسه", "score1": 23, "result1": "حضور ضعيف", "score2": 15, "result2": "راسب", "score3": 7, "result3": "راسب"},
+{"name": "كارن جوزيف نجيب", "id": 25183, "national_id": "201224815193", "code": "P7304", "status": "لسه", "score1": 17, "result1": "راسب", "score2": 8, "result2": "راسب", "score3": 7, "result3": "راسب"},
+{"name": "كيرلس عزت نعيم", "id": 25184, "national_id": "201287876068", "code": "P6795", "status": "تمام", "score1": 26, "result1": "حضور ضعيف", "score2": 7, "result2": "راسب", "score3": 6, "result3": "راسب"},
+{"name": "يوستينا رامى منير", "id": 25185, "national_id": "201277966045", "code": "P4316", "status": "تمام", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 8, "result3": "راسب"},
+{"name": "مريم اسحاق شفى", "id": 25186, "national_id": "201276254852", "code": "P7902", "status": "تمام", "score1": 36, "result1": "حضور ضعيف", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "كرستين هلال فوزى", "id": 25187, "national_id": "201220947756", "code": "P5617", "status": "تمام", "score1": 21, "result1": "حضور ضعيف", "score2": 20, "result2": "راسب", "score3": 21, "result3": "راسب"},
+{"name": "ميرنا الفونس بديع", "id": 25188, "national_id": "201281326459", "code": "P3814", "status": "لسه", "score1": 25, "result1": "حضور ضعيف", "score2": 35, "result2": "حضور ضعيف", "score3": 3, "result3": "راسب"},
+{"name": "جينسيا ناجى عياد", "id": 25190, "national_id": "00000000000", "code": "P5041", "status": "لسه", "score1": 5, "result1": "راسب", "score2": 7, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مريم سامح مدحت", "id": 25191, "national_id": "201112609176", "code": "P2513", "status": "لسه", "score1": 27, "result1": "حضور ضعيف", "score2": 14, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ناردين ونجت فكيه", "id": 25192, "national_id": "201203826761", "code": "P3064", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 26, "result2": "حضور ضعيف", "score3": 8, "result3": "راسب"},
+{"name": "كيرلس فايق", "id": 25193, "national_id": "201284347601", "code": "P9614", "status": "لسه", "score1": 4, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "كيرلس اسامة عدلى", "id": 25194, "national_id": "201270074209", "code": "P4395", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 10, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "بافلى اسامة ميخائيل موسي", "id": 25195, "national_id": "201273393891", "code": "P1293", "status": "لسه", "score1": 5, "result1": "راسب", "score2": 15, "result2": "راسب", "score3": 15, "result3": "راسب"},
+{"name": "جرجس هاني ثابت", "id": 25196, "national_id": "201228101728", "code": "P1905", "status": "تمام", "score1": 4, "result1": "راسب", "score2": 17, "result2": "راسب", "score3": 29, "result3": "راسب"},
+{"name": "جاكلين منير راغب", "id": 25197, "national_id": "201273471159", "code": "P8293", "status": "لسه", "score1": 4, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 17, "result3": "راسب"},
+{"name": "جيسيكا ناجي عياد", "id": 25198, "national_id": "201229892303", "code": "P6287", "status": "تمام", "score1": 19, "result1": "حضور ضعيف", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "سيمون نسيم عجبان", "id": 25199, "national_id": "201275372099", "code": "P7936", "status": "لسه", "score1": 4, "result1": "راسب", "score2": 6, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "0", "id": 25200, "national_id": "00000000000", "code": "P1958", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مهرائيل عادل", "id": 25201, "national_id": "201271885887", "code": "P4798", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "ميرنا عادل غبريال", "id": 25202, "national_id": "201220427120", "code": "P5923", "status": "لسه", "score1": 5, "result1": "راسب", "score2": 8, "result2": "راسب", "score3": 16, "result3": "حضور ضعيف"},
+{"name": "هيلانه هاني عريان", "id": 25203, "national_id": "201279678687", "code": "P5123", "status": "تمام", "score1": 24, "result1": "حضور ضعيف", "score2": 20, "result2": "حضور ضعيف", "score3": 28, "result3": "حضور ضعيف"},
+{"name": "0", "id": 25204, "national_id": "201207697319", "code": "00000000000", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "يوستينا دانيال فتح اللة", "id": 25205, "national_id": "201208555794", "code": "P7508", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "توني جرجس حنا", "id": 25207, "national_id": "201273736110", "code": "P6073", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "شنودة سمير يسري", "id": 25208, "national_id": "201289916936", "code": "P8916", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "كيرلس عماد زغلول", "id": 25209, "national_id": "201276340957", "code": "P4302", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 0, "result3": "راسب"},
+{"name": "مينا هاني فتحى عزيز", "id": 25210, "national_id": "201224656148", "code": "P7659", "status": "لسه", "score1": 0, "result1": "راسب", "score2": 0, "result2": "راسب", "score3": 13, "result3": "راسب"}
+        ];
+
+        function searchStudent() {
+            let inputId = document.getElementById("studentId").value;
+            let inputCode = document.getElementById("myInput").value;
+            let student;
+
+            if (inputCode === "OOOO") {
+                student = students.find(s => s.id == inputId);
+            } else {
+                student = students.find(s => s.id == inputId && s.code == inputCode);
+            }
+
+            if (student) {
+                document.getElementById("studentName").innerText = "الأسم: " + student.name;
+                document.getElementById("studentStatus").innerText = "التذكية: " + student.status;
+
+                if (student.status !== "تمام" && inputCode !== "OOOO") {
+                    document.getElementById("statusMessage").innerText = "الرجاء سرعة تسليم التذكية للخدام لعرض النتيجة";
+                    document.getElementById("resultTable").style.display = "none";
+                    return;
+                }
+
+                document.getElementById("statusMessage").innerText = "";
+                document.getElementById("resultTable").style.display = "block";
+
+                let tableBody = document.getElementById("gradesTable");
+                tableBody.innerHTML = "";
+
+                let subjects = [
+                    { name: "الطقس", score: student.score1, result: student.result1 },
+                    { name: "أنماط الشخصية", score: student.score2, result: student.result2 },
+                    { name: "تاريخ الكنيسة", score: student.score3, result: student.result3 }
+                ];
+
+                subjects.forEach(subject => {
+                    let row = document.createElement("tr");
+
+                    if (subject.result === "حضور ضعيف") {
+                        row.classList.add("weak-attendance");
+                    } else if (subject.result === "تحريرى ضعيف") {
+                        row.classList.add("weak-exam");
+                    } else if (subject.result === "راسب") {
+                        row.classList.add("fail");
+                    } else if (subject.result === "ناجح") {
+                        row.classList.add("pass");
+                    }
+
+                    let resultText = subject.result === "ناجح" ? subject.result + " ❤️💯" : subject.result;
+
+                    row.innerHTML = `
+                        <td>${subject.name}</td>
+                        <td>${subject.score}</td>
+                        <td>${resultText}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+
+                document.getElementById("resultTable").style.display = "table";
+            } else {
+                alert("لم يتم العثور على الطالب!");
+            }
+        }
+    </script>
+
+</body>
+
+</html>
+
+
+    
