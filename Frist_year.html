@@ -234,9 +234,9 @@
 
             if (student) {
                 document.getElementById("studentName").innerText = "الأسم: " + student.name;
-                document.getElementById("studentStatus").innerText = "التذكية: " + student.status;
-                document.getElementById("Status").innerText = "الحالة: " + student.note;
-                if(student.tasks != " "){document.getElementById("note").innerText = "المطلوب تلخيصه:" + student.tasks;}
+                //document.getElementById("studentStatus").innerText = "التذكية: " + student.status;
+                document.getElementById("Status").innerText = "الحالة: " + student.status3;
+                if( student.note != 0 ){document.getElementById("note").innerText = "المواد الباقية:" + student.note;}
 
                 if (student.status !== "تمام" && inputCode !== "OOOO") {
                     document.getElementById("statusMessage").innerText = "الرجاء سرعة تسليم التذكية للخدام لعرض النتيجة";
