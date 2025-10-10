@@ -2,65 +2,87 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>QR Scanner UI جميل</title>
+  <title>QR Scanner احترافي</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
-      font-family: Arial, sans-serif;
-      background: black;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #111;
       display: flex;
       justify-content: center;
       align-items: center;
     }
+
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      filter: brightness(0.9) contrast(1.1);
     }
+
     #overlay {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none;
     }
-    /* إطار المسح */
+
+    /* المربع الاحترافي */
     #scan-frame {
       position: absolute;
       width: 60%;
       height: 40%;
       top: 30%;
       left: 20%;
-      border: 4px solid #00FF00;
-      border-radius: 12px;
-      box-shadow: 0 0 20px #00FF00;
+      border: 3px solid rgba(0,255,0,0.9);
+      border-radius: 16px;
+      box-shadow: 0 0 40px #00FF00, 0 0 60px rgba(0,255,0,0.5);
+      backdrop-filter: blur(6px);
+      animation: glow 1.5s infinite alternate;
     }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 20px #00FF00, 0 0 40px rgba(0,255,0,0.5); }
+      100% { box-shadow: 0 0 50px #00FF00, 0 0 80px rgba(0,255,0,0.7); }
+    }
+
     /* عرض الاسم */
     #nameOverlay {
       position: absolute;
       top: 45%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.6);
       color: #00FF00;
-      padding: 20px 40px;
+      padding: 16px 32px;
       font-size: 2em;
       border-radius: 12px;
       display: none;
       text-align: center;
-      box-shadow: 0 0 15px #00FF00;
+      box-shadow: 0 0 30px #00FF00;
+      text-shadow: 0 0 12px #00FF00;
+      animation: fadeInOut 0.5s forwards;
     }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -60%); }
+      50% { opacity: 1; transform: translate(-50%, -50%); }
+      100% { opacity: 0; transform: translate(-50%, -40%); }
+    }
+
     /* نص إرشادي */
     #instruction {
       position: absolute;
-      bottom: 10%;
+      bottom: 6%;
       width: 100%;
       text-align: center;
-      color: white;
+      color: #fff;
       font-size: 1.2em;
-      text-shadow: 0 0 5px black;
+      text-shadow: 0 0 8px black;
+      letter-spacing: 0.5px;
     }
   </style>
 </head>
