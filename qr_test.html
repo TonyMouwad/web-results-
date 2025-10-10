@@ -2,14 +2,14 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>QR Scanner UI</title>
+  <title>QR Scanner UI بسيط</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
       background: #111;
       display: flex;
       justify-content: center;
@@ -20,25 +20,13 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(0.95) contrast(1.1);
     }
 
     #overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    /* خلفية blur حول المربع */
-    #blur-bg {
-      position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      backdrop-filter: blur(6px);
-      box-shadow: inset 0 0 50px rgba(0,255,0,0.3);
+      pointer-events: none;
     }
 
     /* مربع المسح */
@@ -49,17 +37,10 @@
       top: 30%;
       left: 20%;
       border: 3px solid #00FF00;
-      border-radius: 16px;
-      box-shadow: 0 0 20px #00FF00;
-      animation: glow 1.5s infinite alternate;
+      border-radius: 12px;
     }
 
-    @keyframes glow {
-      0% { box-shadow: 0 0 20px #00FF00, 0 0 40px rgba(0,255,0,0.5); }
-      100% { box-shadow: 0 0 50px #00FF00, 0 0 80px rgba(0,255,0,0.7); }
-    }
-
-    /* اسم الطالب يظهر عند المسح */
+    /* عرض الاسم */
     #nameOverlay {
       position: absolute;
       top: 45%;
@@ -72,15 +53,6 @@
       border-radius: 12px;
       display: none;
       text-align: center;
-      box-shadow: 0 0 30px #00FF00;
-      text-shadow: 0 0 12px #00FF00;
-      animation: fadeInOut 0.5s forwards;
-    }
-
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translate(-50%, -60%); }
-      50% { opacity: 1; transform: translate(-50%, -50%); }
-      100% { opacity: 0; transform: translate(-50%, -40%); }
     }
 
     /* نص إرشادي */
@@ -91,15 +63,12 @@
       text-align: center;
       color: #fff;
       font-size: 1.2em;
-      text-shadow: 0 0 8px black;
-      letter-spacing: 0.5px;
     }
   </style>
 </head>
 <body>
   <video id="video" autoplay playsinline></video>
   <div id="overlay">
-    <div id="blur-bg"></div>
     <div id="scan-frame"></div>
   </div>
   <div id="nameOverlay"></div>
