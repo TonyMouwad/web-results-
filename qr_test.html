@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>قارئ QR بالزووم</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    video {
+      width: 90%;
+      max-width: 500px;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+    #controls {
+      margin: 10px;
+    }
+    input[type=range] {
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+  <h2>📷 قارئ QR بكاميرا الموبايل</h2>
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <div id="controls">
+    🔍 الزووم:
+    <input type="range" id="zoomSlider" min="1" max="3" step="0.1" value="1">
+    <span id="zoomValue">1x</span>
+  </div>
+  <p id="status">جارٍ طلب إذن الكاميرا...</p>
+
+  <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const zoomSlider = document.getElementById("zoomSlider");
+    const zoomValue = document.getElementById("zoomValue");
+    const status = document.getElementById("status");
+
+    let zoom = 1;
+
+    async function initCamera() {
+      try {
+        // طلب إذن الكاميرا الخلفية
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+
+        video.srcObject = stream;
+        video.setAttribute("playsinline", true); // ضروري للآيفون
+        status.textContent = "✅ الكاميرا تعمل الآن";
+        requestAnimationFrame(scan);
+      } catch (err) {
+        console.error(err);
+        status.textContent = "❌ تعذر الوصول إلى الكاميرا: " + err.message;
+      }
+    }
+
+    zoomSlider.addEventListener("input", () => {
+      zoom = parseFloat(zoomSlider.value);
+      zoomValue.textContent = zoom.toFixed(1) + "x";
+    });
+
+    function scan() {
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        const width = video.videoWidth;
+        const height = video.videoHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const zoomedWidth = width / zoom;
+        const zoomedHeight = height / zoom;
+        const x = (width - zoomedWidth) / 2;
+        const y = (height - zoomedHeight) / 2;
+
+        ctx.drawImage(video, x, y, zoomedWidth, zoomedHeight, 0, 0, width, height);
+
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const code = jsQR(imageData.data, width, height);
+        if (code) {
+          status.textContent = "✅ QR: " + code.data;
+        }
+      }
+      requestAnimationFrame(scan);
+    }
+
+    // بدأ التشغيل
+    initCamera();
+  </script>
+</body>
+</html>
