@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>نتيجة الطلاب - خدمة إعداد خدام</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --gold: #c9a227;
+  --gold-light: #e8c84a;
+  --gold-dark: #9a7a18;
+  --deep-blue: #0a0f1e;
+  --navy: #0d1b3e;
+  --dark: #060a12;
+  --cream: #f5efe0;
+  --ivory: #faf6ed;
+  --crimson: #8b1a1a;
+  --text-light: #e8dcc8;
+  --pass-green: #1a4a2e;
+  --fail-red: #4a1a1a;
+  --hidden-blue: #1a2a4a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Coptic cross pattern background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    radial-gradient(ellipse at 20% 20%, rgba(201,162,39,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(139,26,26,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(13,27,62,0.5) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Decorative top border */
+.top-ornament {
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, 
+    transparent, var(--gold-dark), var(--gold), var(--gold-light), 
+    var(--gold), var(--gold-dark), transparent);
+  position: relative;
+}
+
+.top-ornament::after {
+  content: '✝ ✝ ✝';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 8px;
+  white-space: nowrap;
+}
+
+.wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 20px 12px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Church header */
+.church-header {
+  text-align: center;
+  padding: 30px 20px 20px;
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+}
+
+.coptic-cross-svg {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 15px;
+  display: block;
+  filter: drop-shadow(0 0 12px rgba(201,162,39,0.6));
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(201,162,39,0.4)); }
+  50% { filter: drop-shadow(0 0 20px rgba(201,162,39,0.8)); }
+}
+
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  justify-content: center;
+}
+
+.divider-ornament::before,
+.divider-ornament::after {
+  content: '';
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.divider-ornament::after {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.divider-ornament span {
+  color: var(--gold);
+  font-size: 14px;
+}
+
+.church-header h1 {
+  font-family: 'Amiri', serif;
+  font-size: 26px;
+  color: var(--gold-light);
+  font-weight: 700;
+  line-height: 1.4;
+  text-shadow: 0 2px 10px rgba(201,162,39,0.4);
+}
+
+.church-header h2 {
+  font-size: 15px;
+  color: var(--cream);
+  margin-top: 6px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.church-header p {
+  font-size: 13px;
+  color: rgba(232,220,200,0.6);
+  margin-top: 4px;
+}
+
+/* Main card */
+.card {
+  background: linear-gradient(160deg, 
+    rgba(255,255,255,0.05) 0%, 
+    rgba(13,27,62,0.4) 50%,
+    rgba(255,255,255,0.03) 100%);
+  border: 1px solid rgba(201,162,39,0.25);
+  border-radius: 20px;
+  padding: 28px 22px;
+  width: 100%;
+  max-width: 500px;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 25px 60px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(201,162,39,0.2),
+    0 0 40px rgba(201,162,39,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(201,162,39,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Input section */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-label {
+  display: block;
+  font-size: 12px;
+  color: var(--gold);
+  margin-bottom: 7px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,162,39,0.2);
+  border-radius: 12px;
+  color: var(--cream);
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.input-field::placeholder {
+  color: rgba(232,220,200,0.3);
+}
+
+.input-field:focus {
+  border-color: var(--gold);
+  background: rgba(201,162,39,0.06);
+  box-shadow: 0 0 0 3px rgba(201,162,39,0.1), 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Search button */
+.search-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold));
+  background-size: 200% auto;
+  color: var(--dark);
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 25px rgba(201,162,39,0.3);
+  margin-top: 4px;
+}
+
+.search-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.search-btn:hover::before { left: 100%; }
+.search-btn:hover { 
+  background-position: right center;
+  box-shadow: 0 8px 30px rgba(201,162,39,0.5);
+  transform: translateY(-2px);
+}
+
+.search-btn:active { transform: translateY(0); }
+
+/* Student result card */
+.student-result {
+  margin-top: 24px;
+  display: none;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.student-header {
+  background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(139,26,26,0.1));
+  border: 1px solid rgba(201,162,39,0.3);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.student-header::before {
+  content: '✝';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(201,162,39,0.2);
+  font-size: 28px;
+}
+
+.student-header::after {
+  content: '✝';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(201,162,39,0.2);
+  font-size: 28px;
+}
+
+.student-name-display {
+  font-family: 'Amiri', serif;
+  font-size: 22px;
+  color: var(--gold-light);
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(201,162,39,0.3);
+}
+
+.student-id-display {
+  font-size: 12px;
+  color: rgba(232,220,200,0.5);
+  margin-top: 4px;
+}
+
+/* Error message */
+.error-msg {
+  color: #ff6b6b;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px;
+  background: rgba(255,107,107,0.1);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-radius: 10px;
+  display: none;
+  margin-top: 16px;
+  animation: fadeInUp 0.3s ease;
+}
+
+/* Warning message (تذكية) */
+.warning-msg {
+  color: var(--gold-light);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px;
+  background: rgba(201,162,39,0.1);
+  border: 1px solid rgba(201,162,39,0.3);
+  border-radius: 10px;
+  display: none;
+  margin-top: 16px;
+  animation: fadeInUp 0.3s ease;
+}
+
+/* Grades table */
+.grades-section {
+  display: none;
+}
+
+.section-title {
+  font-size: 12px;
+  color: rgba(232,220,200,0.5);
+  text-align: center;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.grade-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  animation: slideIn 0.4s ease forwards;
+  opacity: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.grade-card:hover { transform: translateX(-3px); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.grade-card:nth-child(1) { animation-delay: 0.05s; }
+.grade-card:nth-child(2) { animation-delay: 0.1s; }
+.grade-card:nth-child(3) { animation-delay: 0.15s; }
+.grade-card:nth-child(4) { animation-delay: 0.2s; }
+.grade-card:nth-child(5) { animation-delay: 0.25s; }
+.grade-card:nth-child(6) { animation-delay: 0.3s; }
+
+.grade-card.pass {
+  border-color: rgba(52,168,83,0.3);
+  background: rgba(52,168,83,0.07);
+}
+.grade-card.fail {
+  border-color: rgba(234,67,53,0.3);
+  background: rgba(234,67,53,0.07);
+}
+.grade-card.hidden {
+  border-color: rgba(66,133,244,0.3);
+  background: rgba(66,133,244,0.07);
+}
+
+.grade-card::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 0 12px 12px 0;
+}
+
+.grade-card.pass::before { background: #34a853; }
+.grade-card.fail::before { background: #ea4335; }
+.grade-card.hidden::before { background: #4285f4; }
+
+.subject-name {
+  font-size: 14px;
+  color: var(--cream);
+  font-weight: 600;
+  flex: 1;
+}
+
+.score-badge {
+  font-family: 'Amiri', serif;
+  font-size: 20px;
+  font-weight: 700;
+  min-width: 44px;
+  text-align: center;
+  color: var(--text-light);
+}
+
+.status-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.pass .status-pill { background: rgba(52,168,83,0.2); color: #6dd58c; border: 1px solid rgba(52,168,83,0.3); }
+.fail .status-pill { background: rgba(234,67,53,0.2); color: #ff8a80; border: 1px solid rgba(234,67,53,0.3); }
+.hidden .status-pill { background: rgba(66,133,244,0.2); color: #82b1ff; border: 1px solid rgba(66,133,244,0.3); }
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(232,220,200,0.5);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Note box */
+.note-box {
+  display: none;
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(201,162,39,0.08);
+  border: 1px solid rgba(201,162,39,0.25);
+  font-size: 13px;
+  color: var(--cream);
+  line-height: 1.7;
+}
+
+.note-title {
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 20px;
+  font-size: 11px;
+  color: rgba(232,220,200,0.25);
+  letter-spacing: 1px;
+}
+
+.footer-cross {
+  color: rgba(201,162,39,0.3);
+  margin: 0 6px;
+}
+
+/* Scroll into view smoothly */
+html { scroll-behavior: smooth; }
+
+/* Loading spinner */
+.loading {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  color: var(--gold);
+  font-size: 13px;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(201,162,39,0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 10px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+</style>
+</head>
+<body>
+
+<div class="top-ornament"></div>
+
+<div class="wrapper">
+
+  <!-- Church Header -->
+  <div class="church-header">
+
+            <img src="logo.png" sizes="width=50%"  class="coptic-cross-svg" style="width: 80%; height: 50%;">
+
+    <!-- Coptic Ankh Cross SVG -->
+    <!-- <svg class="coptic-cross-svg" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg"> -->
+      <!-- Ankh loop -->
+      <ellipse cx="50" cy="28" rx="18" ry="22" stroke="#c9a227" stroke-width="6" fill="none"/>
+      <!-- Vertical bar -->
+      <line x1="50" y1="50" x2="50" y2="115" stroke="#c9a227" stroke-width="7" stroke-linecap="round"/>
+      <!-- Horizontal bar -->
+      <line x1="18" y1="68" x2="82" y2="68" stroke="#c9a227" stroke-width="7" stroke-linecap="round"/>
+      <!-- Small decorative dots -->
+      <circle cx="50" cy="28" r="4" fill="#e8c84a"/>
+      <circle cx="18" cy="68" r="3" fill="#c9a227"/>
+      <circle cx="82" cy="68" r="3" fill="#c9a227"/>
+    </svg>
+
+    <h1>خدمة إعداد خدام</h1>
+    <div class="divider-ornament"><span>✦</span></div>
+    <h2>دفعة البابا شنودة الثالث</h2>
+    <p>نتيجة الترم الأول</p>
+  </div>
+
+  <!-- Main Card -->
+  <div class="card">
+
+    <div class="input-section">
+
+      <div class="input-group">
+        <label class="input-label" for="studentId">كود الطالب</label>
+        <input
+          class="input-field"
+          type="number"
+          id="studentId"
+          placeholder="أدخل الكود هنا"
+          inputmode="numeric"
+        >
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="studentCode">كلمة السر</label>
+        <input
+          class="input-field"
+          type="password"
+          id="studentCode"
+          placeholder="أدخل كلمة السر"
+          autocomplete="off"
+        >
+      </div>
+
+      <button class="search-btn" onclick="searchStudent()">
+        ✝ &nbsp; عرض النتيجة
+      </button>
+
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      جارٍ البحث...
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg">⚠ لم يتم العثور على الطالب</div>
+
+    <!-- Warning -->
+    <div class="warning-msg" id="warningMsg">⚠ الرجاء تسليم التذكية أولاً للاطلاع على النتيجة</div>
+
+    <!-- Student Result -->
+    <div class="student-result" id="studentResult">
+
+      <div class="student-header">
+        <div class="student-name-display" id="studentName"></div>
+        <div class="student-id-display" id="studentIdDisplay"></div>
+      </div>
+
+      <div class="grades-section" id="gradesSection">
+        <div class="section-title">نتيجة المواد</div>
+        <div id="gradesList"></div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#34a853"></div>
+            <span>ناجح</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#ea4335"></div>
+            <span>راسب</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#4285f4"></div>
+            <span>محجوبة</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box" id="noteBox">
+        <div class="note-title">✦ ملاحظة</div>
+        <div id="noteText">
+            <p>لمعرفة سبب حجب بعض المواد والحلول المتاحة سيكون من خلال جلسة فردية مع اللجنة يوم الجمعة 13 مارس الساعة 11 امام مكتب أبونا شينوتى</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-cross">✝</span>
+    نظام عرض نتائج خدمة إعداد خدام
+    <span class="footer-cross">✝</span>
+  </div>
+
+</div>
+
+<script>
+
+const students = [{"name":"الإسم","id":"الكود","code":"الرقم السرى","phone":"رقم التليفون","status":"التذكية","score1":"تربوى","result1":"الحالة","score2":"طقس جزء أول","result2":"الحالة","score3":"لاهوت روحى","result3":"الحالة","score4":"لاهوت مقارن جزء أول","result4":"الحالة","score5":"عقيدة جزء أول","result5":"الحالة","score6":"تاريخ كنيسة","result6":"الحالة"},{"name":"مارفل سامح ملاك","id":"26013","code":"P7716","phone":"201211088239","status":"تمام","score1":"56","result1":"ناجح","score2":"56","result2":"ناجح","score3":"49","result3":"ناجح","score4":"51","result4":"ناجح","score5":"36","result5":"محجوبة","score6":"52","result6":"ناجح"},{"name":"جرجس فوزي نصير","id":"26065","code":"P8173","phone":"201203357891","status":"لسة","score1":"54","result1":"ناجح","score2":"45","result2":"ناجح","score3":"50","result3":"ناجح","score4":"56","result4":"ناجح","score5":"44","result5":"محجوبة","score6":"50","result6":"ناجح"},{"name":"ايريني وليد عزت ","id":"25179","code":"P3179","phone":"201204865253","status":"تمام","score1":"45","result1":"ناجح","score2":"60","result2":"ناجح","score3":"43","result3":"ناجح","score4":"55","result4":"ناجح","score5":"42","result5":"ناجح","score6":"49","result6":"ناجح"},{"name":"هايدى عادل عبد السيد","id":"26045","code":"P7534","phone":"201211191436","status":"تمام","score1":"47","result1":"محجوبة","score2":"58","result2":"ناجح","score3":"44","result3":"ناجح","score4":"45","result4":"محجوبة","score5":"44","result5":"ناجح","score6":"54","result6":"ناجح"},{"name":"ميرا جورج سعدالله","id":"26058","code":"P8294","phone":"201273995412","status":"تمام","score1":"47","result1":"ناجح","score2":"55","result2":"ناجح","score3":"51","result3":"ناجح","score4":"47","result4":"محجوبة","score5":"40","result5":"محجوبة","score6":"41","result6":"ناجح"},{"name":"شيرين بخيت حلمى","id":"26072","code":"P8640","phone":"201283480590","status":"لسة","score1":"49","result1":"ناجح","score2":"57","result2":"ناجح","score3":"40","result3":"ناجح","score4":"49","result4":"ناجح","score5":"41","result5":"ناجح","score6":"40","result6":"محجوبة"},{"name":"عماد السبع شاكر","id":"26011","code":"P6409","phone":"201272625602","status":"تمام","score1":"46","result1":"ناجح","score2":"50","result2":"ناجح","score3":"40","result3":"ناجح","score4":"40","result4":"ناجح","score5":"38","result5":"محجوبة","score6":"52","result6":"ناجح"},{"name":"حنان ادوار راضي","id":"26007","code":"P7042","phone":"201223985554","status":"تمام","score1":"42","result1":"محجوبة","score2":"59","result2":"ناجح","score3":"22","result3":"راسب","score4":"46","result4":"محجوبة","score5":"42","result5":"محجوبة","score6":"54","result6":"ناجح"},{"name":"جيهان منصور سفين","id":"26006","code":"P1586","phone":"201285763509","status":"تمام","score1":"53","result1":"ناجح","score2":"47","result2":"ناجح","score3":"36","result3":"محجوبة","score4":"49","result4":"ناجح","score5":"26","result5":"محجوبة","score6":"49","result6":"ناجح"},{"name":"مريم سامح فخري","id":"26016","code":"P4835","phone":"201200176288","status":"تمام","score1":"49","result1":"ناجح","score2":"50","result2":"ناجح","score3":"20","result3":"محجوبة","score4":"53","result4":"ناجح","score5":"34","result5":"محجوبة","score6":"49","result6":"ناجح"},{"name":"كلارا عاطف عزت","id":"26031","code":"P6725","phone":"201283159192","status":"تمام","score1":"40","result1":"محجوبة","score2":"45","result2":"محجوبة","score3":"43","result3":"محجوبة","score4":"59","result4":"ناجح","score5":"30","result5":"محجوبة","score6":"36","result6":"محجوبة"},{"name":"مهرائيل مدحت انور","id":"26018","code":"P5461","phone":"201228644210","status":"تمام","score1":"50","result1":"ناجح","score2":"49","result2":"ناجح","score3":"47","result3":"ناجح","score4":"40","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"36","result6":"محجوبة"},{"name":"مارينا داود وليم","id":"26089","code":"P8847","phone":"201280253282","status":"تمام","score1":"36","result1":"محجوبة","score2":"51","result2":"ناجح","score3":"41","result3":"ناجح","score4":"47","result4":"ناجح","score5":"36","result5":"ناجح","score6":"41","result6":"ناجح"},{"name":"رين فيصل عوض","id":"26009","code":"P8265","phone":"201279912659","status":"تمام","score1":"43","result1":"محجوبة","score2":"35","result2":"محجوبة","score3":"42","result3":"محجوبة","score4":"42","result4":"محجوبة","score5":"38","result5":"محجوبة","score6":"48","result6":"ناجح"},{"name":"ابانوب اكرامي عدلى","id":"26037","code":"P3926","phone":"201224245723","status":"تمام","score1":"50","result1":"ناجح","score2":"57","result2":"ناجح","score3":"40","result3":"محجوبة","score4":"41","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"26","result6":"محجوبة"},{"name":"سلفيا سامح نبيل","id":"25023","code":"P8649","phone":"201287768860","status":"تمام","score1":"33","result1":"محجوبة","score2":"45","result2":"محجوبة","score3":"41","result3":"محجوبة","score4":"40","result4":"محجوبة","score5":"32","result5":"محجوبة","score6":"48","result6":"ناجح"},{"name":"دميانة روماني راتب","id":"26033","code":"P8457","phone":"201275593819","status":"تمام","score1":"44","result1":"ناجح","score2":"50","result2":"ناجح","score3":"31","result3":"محجوبة","score4":"37","result4":"محجوبة","score5":"36","result5":"محجوبة","score6":"36","result6":"راسب"},{"name":"ايريني بخيت يوسف","id":"26069","code":"P1765","phone":"201200527167","status":"تمام","score1":"34","result1":"محجوبة","score2":"45","result2":"ناجح","score3":"43","result3":"ناجح","score4":"32","result4":"محجوبة","score5":"41","result5":"ناجح","score6":"36","result6":"راسب"},{"name":"توماس كرم كامل","id":"26059","code":"P1408","phone":"201202380807","status":"لسة","score1":"46","result1":"ناجح","score2":"48","result2":"ناجح","score3":"30","result3":"محجوبة","score4":"42","result4":"محجوبة","score5":"22","result5":"محجوبة","score6":"34","result6":"محجوبة"},{"name":"تريزا ناجى نصيف","id":"26051","code":"P2481","phone":"201289523760","status":"تمام","score1":"37","result1":"محجوبة","score2":"32","result2":"محجوبة","score3":"39","result3":"ناجح","score4":"38","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"41","result6":"ناجح"},{"name":"فريال عدلي فايق","id":"26070","code":"P7084","phone":"201225600981","status":"تمام","score1":"43","result1":"ناجح","score2":"41","result2":"ناجح","score3":"22","result3":"راسب","score4":"29","result4":"محجوبة","score5":"29","result5":"محجوبة","score6":"52","result6":"ناجح"},{"name":"ايريني نادر عبدالتواب","id":"26041","code":"P8342","phone":"201272638503","status":"تمام","score1":"42","result1":"ناجح","score2":"47","result2":"ناجح","score3":"43","result3":"ناجح","score4":"17","result4":"محجوبة","score5":"34","result5":"محجوبة","score6":"32","result6":"راسب"},{"name":"دميانة ماجد فؤاد","id":"26008","code":"P3891","phone":"201210825107","status":"تمام","score1":"43","result1":"محجوبة","score2":"44","result2":"محجوبة","score3":"18","result3":"محجوبة","score4":"39","result4":"محجوبة","score5":"36","result5":"محجوبة","score6":"35","result6":"محجوبة"},{"name":"ماريا جرجس بخيت","id":"26029","code":"P5938","phone":"201279926232","status":"تمام","score1":"46","result1":"ناجح","score2":"45","result2":"ناجح","score3":"13","result3":"محجوبة","score4":"39","result4":"محجوبة","score5":"32","result5":"محجوبة","score6":"39","result6":"راسب"},{"name":"مينا هاني فتحي","id":"26054","code":"P9027","phone":"201224656148","status":"تمام","score1":"37","result1":"محجوبة","score2":"37","result2":"محجوبة","score3":"35","result3":"محجوبة","score4":"22","result4":"محجوبة","score5":"42","result5":"محجوبة","score6":"40","result6":"ناجح"},{"name":"ابتسام ممدوح شفيق","id":"26023","code":"P6983","phone":"201225324803","status":"تمام","score1":"35","result1":"محجوبة","score2":"49","result2":"ناجح","score3":"31","result3":"محجوبة","score4":"33","result4":"محجوبة","score5":"31","result5":"محجوبة","score6":"33","result6":"راسب"},{"name":"مينا ماجد فايز","id":"25157","code":"P2984","phone":"201278003329","status":"تمام","score1":"48","result1":"ناجح","score2":"60","result2":"ناجح","score3":"0","result3":"محجوبة","score4":"20","result4":"محجوبة","score5":"28","result5":"محجوبة","score6":"52","result6":"ناجح"},{"name":"مريم راضي حكيم","id":"26026","code":"P3624","phone":"201280372526","status":"تمام","score1":"46","result1":"ناجح","score2":"51","result2":"ناجح","score3":"24","result3":"محجوبة","score4":"33","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"25","result6":"محجوبة"},{"name":"ابانوب ماهر عطية","id":"26001","code":"P8031","phone":"201223679949","status":"تمام","score1":"45","result1":"ناجح","score2":"57","result2":"ناجح","score3":"23","result3":"محجوبة","score4":"31","result4":"محجوبة","score5":"24","result5":"محجوبة","score6":"27","result6":"محجوبة"},{"name":"منير سامى عبد الملك","id":"26073","code":"P5128","phone":"201206236287","status":"لسة","score1":"38","result1":"محجوبة","score2":"32","result2":"محجوبة","score3":"31","result3":"محجوبة","score4":"31","result4":"محجوبة","score5":"38","result5":"محجوبة","score6":"35","result6":"راسب"},{"name":"مريم مقار القس يعقوب","id":"25111","code":"P8934","phone":"201200962348","status":"تمام","score1":"37","result1":"محجوبة","score2":"39","result2":"محجوبة","score3":"33","result3":"محجوبة","score4":"35","result4":"محجوبة","score5":"27","result5":"محجوبة","score6":"33","result6":"محجوبة"},{"name":"رامز كرم رمزي","id":"26034","code":"P2368","phone":"201284383744","status":"تمام","score1":"41","result1":"ناجح","score2":"40","result2":"راسب","score3":"35","result3":"محجوبة","score4":"31","result4":"محجوبة","score5":"26","result5":"محجوبة","score6":"31","result6":"محجوبة"},{"name":"فبرونيا كمال حليم","id":"26028","code":"P2046","phone":"201205669114","status":"تمام","score1":"46","result1":"ناجح","score2":"57","result2":"ناجح","score3":"37","result3":"ناجح","score4":"28","result4":"محجوبة","score5":"25","result5":"محجوبة","score6":"11","result6":"محجوبة"},{"name":"جرجس ونجت فكيه","id":"26038","code":"P5581","phone":"201551021751","status":"تمام","score1":"46","result1":"ناجح","score2":"51","result2":"ناجح","score3":"22","result3":"محجوبة","score4":"32","result4":"محجوبة","score5":"24","result5":"محجوبة","score6":"25","result6":"راسب"},{"name":"ماري اشرف نجيب","id":"26049","code":"P1074","phone":"201220043374","status":"تمام","score1":"38","result1":"محجوبة","score2":"37","result2":"محجوبة","score3":"33","result3":"محجوبة","score4":"23","result4":"محجوبة","score5":"32","result5":"محجوبة","score6":"38","result6":"راسب"},{"name":"كيرلس هشام بباوي","id":"26036","code":"P6814","phone":"201272424753","status":"تمام","score1":"36","result1":"محجوبة","score2":"36","result2":"محجوبة","score3":"35","result3":"محجوبة","score4":"32","result4":"محجوبة","score5":"22","result5":"محجوبة","score6":"32","result6":"راسب"},{"name":"كلارا رضا صالح","id":"25095","code":"P7620","phone":"201273178621","status":"تمام","score1":"43","result1":"ناجح","score2":"39","result2":"محجوبة","score3":"16","result3":"محجوبة","score4":"38","result4":"محجوبة","score5":"31","result5":"محجوبة","score6":"26","result6":"محجوبة"},{"name":"مريم رشدى راشد","id":"26015","code":"P9628","phone":"201273170791","status":"تمام","score1":"47","result1":"ناجح","score2":"50","result2":"ناجح","score3":"26","result3":"محجوبة","score4":"30","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"26","result6":"راسب"},{"name":"تيبر عبدالتواب سعد","id":"26094","code":"P6704","phone":"201202661497","status":"تمام","score1":"25","result1":"محجوبة","score2":"24","result2":"محجوبة","score3":"31","result3":"محجوبة","score4":"39","result4":"محجوبة","score5":"36","result5":"محجوبة","score6":"36","result6":"راسب"},{"name":"مينا مجدي عزيز","id":"26056","code":"P3718","phone":"201550899406","status":"تمام","score1":"35","result1":"محجوبة","score2":"42","result2":"راسب","score3":"40","result3":"ناجح","score4":"17","result4":"محجوبة","score5":"36","result5":"محجوبة","score6":"19","result6":"محجوبة"},{"name":"مارينا عادل سامي","id":"26061","code":"P2985","phone":"201207881106","status":"تمام","score1":"27","result1":"محجوبة","score2":"47","result2":"ناجح","score3":"13","result3":"محجوبة","score4":"31","result4":"محجوبة","score5":"36","result5":"محجوبة","score6":"35","result6":"راسب"},{"name":"مهرائيل امجد نصحي","id":"26067","code":"P9406","phone":"201229611337","status":"تمام","score1":"42","result1":"محجوبة","score2":"34","result2":"محجوبة","score3":"13","result3":"محجوبة","score4":"30","result4":"محجوبة","score5":"26","result5":"محجوبة","score6":"43","result6":"ناجح"},{"name":"بيتر مجدي لمعي","id":"26048","code":"P9652","phone":"201281563089","status":"تمام","score1":"38","result1":"محجوبة","score2":"46","result2":"ناجح","score3":"35","result3":"محجوبة","score4":"18","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"18","result6":"محجوبة"},{"name":"أمجد عياد فهمي","id":"26090","code":"P2916","phone":"201220839634","status":"تمام","score1":"29","result1":"محجوبة","score2":"27","result2":"محجوبة","score3":"33","result3":"محجوبة","score4":"26","result4":"محجوبة","score5":"32","result5":"محجوبة","score6":"38","result6":"راسب"},{"name":"ابرام مجدي نصار","id":"25152","code":"P6475","phone":"201224105741","status":"تمام","score1":"43","result1":"ناجح","score2":"47","result2":"ناجح","score3":"32","result3":"محجوبة","score4":"19","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"14","result6":"محجوبة"},{"name":"مريم مجدي السبع","id":"26017","code":"P1297","phone":"201286633970","status":"تمام","score1":"50","result1":"ناجح","score2":"30","result2":"راسب","score3":"7","result3":"محجوبة","score4":"31","result4":"محجوبة","score5":"40","result5":"محجوبة","score6":"24","result6":"راسب"},{"name":"ناريمان عياد بخيت","id":"26085","code":"#REF!","phone":"201228710312","status":"تمام","score1":"27","result1":"محجوبة","score2":"30","result2":"محجوبة","score3":"27","result3":"محجوبة","score4":"23","result4":"محجوبة","score5":"39","result5":"راسب","score6":"35","result6":"راسب"},{"name":"مينا رضا صالح","id":"25057","code":"P6028","phone":"201289715698","status":"تمام","score1":"38","result1":"محجوبة","score2":"37","result2":"ناجح","score3":"22","result3":"محجوبة","score4":"12","result4":"محجوبة","score5":"31","result5":"محجوبة","score6":"37","result6":"راسب"},{"name":"ناريمان نبيل كميل","id":"26071","code":"P3951","phone":"201211497791","status":"لسة","score1":"24","result1":"راسب","score2":"40","result2":"ناجح","score3":"18","result3":"محجوبة","score4":"40","result4":"محجوبة","score5":"26","result5":"محجوبة","score6":"25","result6":"محجوبة"},{"name":"جومانا ملاك عطالله","id":"26005","code":"P9304","phone":"201556920386","status":"تمام","score1":"36","result1":"محجوبة","score2":"47","result2":"ناجح","score3":"7","result3":"محجوبة","score4":"30","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"42","result6":"راسب"},{"name":"ابرام فادي فتحي","id":"26002","code":"P4927","phone":"201200176082","status":"تمام","score1":"46","result1":"ناجح","score2":"47","result2":"ناجح","score3":"8","result3":"محجوبة","score4":"18","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"22","result6":"محجوبة"},{"name":"روماني سليمان غالي","id":"26062","code":"P7341","phone":"201271716625","status":"تمام","score1":"38","result1":"محجوبة","score2":"30","result2":"محجوبة","score3":"31","result3":"محجوبة","score4":"21","result4":"محجوبة","score5":"38","result5":"محجوبة","score6":"12","result6":"محجوبة"},{"name":"جومانا خير متي","id":"26004","code":"P2749","phone":"201271633865","status":"تمام","score1":"46","result1":"ناجح","score2":"43","result2":"راسب","score3":"5","result3":"محجوبة","score4":"34","result4":"محجوبة","score5":"24","result5":"محجوبة","score6":"17","result6":"محجوبة"},{"name":"فادي فتحي ماهر","id":"26012","code":"P2084","phone":"201270644733","status":"تمام","score1":"47","result1":"ناجح","score2":"42","result2":"ناجح","score3":"24","result3":"محجوبة","score4":"27","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"15","result6":"محجوبة"},{"name":"توماس منير ميلاد","id":"26074","code":"P2379","phone":"201286961067","status":"لسة","score1":"48","result1":"ناجح","score2":"55","result2":"ناجح","score3":"6","result3":"محجوبة","score4":"20","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"38","result6":"راسب"},{"name":"كيرلس رامي رمسيس","id":"26040","code":"P1659","phone":"201202924755","status":"تمام","score1":"40","result1":"ناجح","score2":"47","result2":"ناجح","score3":"36","result3":"محجوبة","score4":"9","result4":"محجوبة","score5":"18","result5":"محجوبة","score6":"16","result6":"محجوبة"},{"name":"كيرمينا ميشيل فوزي","id":"26084","code":"P4156","phone":"201202453062","status":"تمام","score1":"27","result1":"محجوبة","score2":"24","result2":"محجوبة","score3":"34","result3":"محجوبة","score4":"18","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"33","result6":"راسب"},{"name":"نرمين هاني منير","id":"26082","code":"P8421","phone":"201225325353","status":"لسة","score1":"26","result1":"محجوبة","score2":"31","result2":"محجوبة","score3":"20","result3":"محجوبة","score4":"43","result4":"ناجح","score5":"12","result5":"محجوبة","score6":"33","result6":"محجوبة"},{"name":"مايكل كمال فهمي","id":"25048","code":"P6048","phone":"201223752772","status":"تمام","score1":"25","result1":"محجوبة","score2":"38","result2":"محجوبة","score3":"28","result3":"راسب","score4":"19","result4":"محجوبة","score5":"37","result5":"راسب","score6":"17","result6":"محجوبة"},{"name":"مريم يوسف ثابت","id":"25112","code":"P7105","phone":"201228713524","status":"تمام","score1":"35","result1":"محجوبة","score2":"27","result2":"محجوبة","score3":"6","result3":"محجوبة","score4":"33","result4":"محجوبة","score5":"32","result5":"محجوبة","score6":"29","result6":"محجوبة"},{"name":"ايريني عدلي جابر","id":"26035","code":"P9740","phone":"201124647692","status":"تمام","score1":"28","result1":"محجوبة","score2":"31","result2":"محجوبة","score3":"25","result3":"محجوبة","score4":"24","result4":"محجوبة","score5":"22","result5":"محجوبة","score6":"31","result6":"راسب"},{"name":"ماريا يوسف سعيد","id":"26014","code":"P3540","phone":"201210227862","status":"تمام","score1":"36","result1":"محجوبة","score2":"50","result2":"ناجح","score3":"5","result3":"محجوبة","score4":"16","result4":"محجوبة","score5":"20","result5":"محجوبة","score6":"31","result6":"راسب"},{"name":"سوسنا ايهاب وصفى","id":"25091","code":"P6918","phone":"201277384465","status":"تمام","score1":"38","result1":"محجوبة","score2":"40","result2":"راسب","score3":"4","result3":"محجوبة","score4":"34","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"21","result6":"راسب"},{"name":"كيرلس حازم ثابت","id":"25097","code":"P6732","phone":"201275920201","status":"تمام","score1":"34","result1":"محجوبة","score2":"34","result2":"ناجح","score3":"9","result3":"محجوبة","score4":"26","result4":"محجوبة","score5":"27","result5":"محجوبة","score6":"18","result6":"محجوبة"},{"name":"ناردين عبدالملاك صبحي","id":"26060","code":"P5673","phone":"201114729707","status":"تمام","score1":"34","result1":"محجوبة","score2":"43","result2":"ناجح","score3":"6","result3":"محجوبة","score4":"20","result4":"محجوبة","score5":"16","result5":"محجوبة","score6":"29","result6":"راسب"},{"name":"بربارة وليد نبيل","id":"26066","code":"P2694","phone":"201021306488","status":"تمام","score1":"38","result1":"محجوبة","score2":"29","result2":"محجوبة","score3":"12","result3":"محجوبة","score4":"23","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"14","result6":"محجوبة"},{"name":"مهرائيل هشام كامل","id":"26042","code":"#REF!","phone":"201201293780","status":"تمام","score1":"48","result1":"ناجح","score2":"11","result2":"محجوبة","score3":"11","result3":"محجوبة","score4":"23","result4":"محجوبة","score5":"31","result5":"محجوبة","score6":"23","result6":"محجوبة"},{"name":"مهرائيل مدحت مكرم","id":"26019","code":"P7038","phone":"201202501409","status":"تمام","score1":"25","result1":"محجوبة","score2":"28","result2":"محجوبة","score3":"29","result3":"محجوبة","score4":"28","result4":"محجوبة","score5":"18","result5":"محجوبة","score6":"15","result6":"محجوبة"},{"name":"بافلى اسامة ميخائيل","id":"25195","code":"P1293","phone":"201273393891","status":"تمام","score1":"26","result1":"محجوبة","score2":"50","result2":"ناجح","score3":"6","result3":"محجوبة","score4":"17","result4":"محجوبة","score5":"29","result5":"محجوبة","score6":"13","result6":"محجوبة"},{"name":"جومانة جرجس زكري","id":"26025","code":"P9571","phone":"201206410095","status":"تمام","score1":"45","result1":"ناجح","score2":"28","result2":"راسب","score3":"16","result3":"محجوبة","score4":"18","result4":"محجوبة","score5":"16","result5":"محجوبة","score6":"15","result6":"محجوبة"},{"name":"ميرولا حنا رشدي","id":"25056","code":"P8753","phone":"201210308749","status":"تمام","score1":"28","result1":"محجوبة","score2":"49","result2":"ناجح","score3":"9","result3":"محجوبة","score4":"22","result4":"محجوبة","score5":"18","result5":"محجوبة","score6":"11","result6":"محجوبة"},{"name":"ميرولا ماجد فايز","id":"26020","code":"P8142","phone":"201067107204","status":"تمام","score1":"29","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"13","result3":"محجوبة","score4":"34","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"30","result6":"راسب"},{"name":"كيرلس اسامة عدلى","id":"25194","code":"P4395","phone":"201270074209","status":"تمام","score1":"22","result1":"محجوبة","score2":"34","result2":"محجوبة","score3":"15","result3":"محجوبة","score4":"25","result4":"محجوبة","score5":"20","result5":"محجوبة","score6":"18","result6":"محجوبة"},{"name":"جون جاد وهيب","id":"25018","code":"P8450","phone":"201222861887","status":"تمام","score1":"29","result1":"محجوبة","score2":"26","result2":"محجوبة","score3":"25","result3":"محجوبة","score4":"6","result4":"محجوبة","score5":"22","result5":"محجوبة","score6":"22","result6":"محجوبة"},{"name":"كرستينا عماد منير يوسف","id":"26046","code":"P8125","phone":"201203753215","status":"تمام","score1":"28","result1":"محجوبة","score2":"44","result2":"محجوبة","score3":"7","result3":"محجوبة","score4":"26","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"11","result6":"محجوبة"},{"name":"توماس معزوز حليم","id":"26039","code":"P7203","phone":"201206302474","status":"تمام","score1":"27","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"22","result3":"محجوبة","score4":"30","result4":"محجوبة","score5":"6","result5":"محجوبة","score6":"21","result6":"محجوبة"},{"name":"مريم هاني منصور","id":"26091","code":"P7603","phone":"201272935993","status":"تمام","score1":"27","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"12","result3":"محجوبة","score4":"25","result4":"محجوبة","score5":"32","result5":"محجوبة","score6":"9","result6":"محجوبة"},{"name":"ديفيد رؤوف مراد","id":"26075","code":"P6915","phone":"201270825512","status":"لسة","score1":"48","result1":"ناجح","score2":"39","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"10","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"24","result6":"راسب"},{"name":"كيرمينا نبيل فاروق","id":"25164","code":"P3185","phone":"201222745341","status":"تمام","score1":"35","result1":"راسب","score2":"34","result2":"محجوبة","score3":"20","result3":"محجوبة","score4":"4","result4":"محجوبة","score5":"6","result5":"محجوبة","score6":"20","result6":"محجوبة"},{"name":"نانسى أنور لطيف","id":"26057","code":"P4560","phone":"201277104395","status":"لسة","score1":"30","result1":"محجوبة","score2":"54","result2":"ناجح","score3":"7","result3":"محجوبة","score4":"9","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"19","result6":"محجوبة"},{"name":"سمعان اشرف فريد","id":"25024","code":"P5230","phone":"201272103199","status":"تمام","score1":"38","result1":"محجوبة","score2":"30","result2":"محجوبة","score3":"3","result3":"محجوبة","score4":"14","result4":"محجوبة","score5":"6","result5":"محجوبة","score6":"22","result6":"محجوبة"},{"name":"مينا جرجس بخيت","id":"26032","code":"P1093","phone":"201204293835","status":"تمام","score1":"34","result1":"محجوبة","score2":"43","result2":"راسب","score3":"0","result3":"محجوبة","score4":"19","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"16","result6":"محجوبة"},{"name":"أبانوب وليم خلف","id":"26080","code":"P3204","phone":"201274599188","status":"لسة","score1":"50","result1":"ناجح","score2":"47","result2":"ناجح","score3":"0","result3":"محجوبة","score4":"9","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"4","result6":"محجوبة"},{"name":"ناديه يوسف شحاته","id":"25141","code":"P7284","phone":"201210308749","status":"تمام","score1":"28","result1":"محجوبة","score2":"44","result2":"ناجح","score3":"2","result3":"محجوبة","score4":"22","result4":"محجوبة","score5":"6","result5":"محجوبة","score6":"6","result6":"محجوبة"},{"name":"مارفي جرجس زكري","id":"26024","code":"P1405","phone":"201228098502","status":"تمام","score1":"35","result1":"محجوبة","score2":"19","result2":"راسب","score3":"0","result3":"محجوبة","score4":"18","result4":"محجوبة","score5":"18","result5":"محجوبة","score6":"19","result6":"محجوبة"},{"name":"ايريني اشرف فهيم","id":"25075","code":"P9051","phone":"201278793699","status":"تمام","score1":"28","result1":"محجوبة","score2":"18","result2":"محجوبة","score3":"6","result3":"محجوبة","score4":"14","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"11","result6":"محجوبة"},{"name":"ايريني عنتر بطرس","id":"26063","code":"P6502","phone":"201273384821","status":"تمام","score1":"23","result1":"محجوبة","score2":"23","result2":"محجوبة","score3":"14","result3":"محجوبة","score4":"14","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"19","result6":"محجوبة"},{"name":"دميانة نبيل يعقوب","id":"26068","code":"P5832","phone":"201271083091","status":"تمام","score1":"40","result1":"ناجح","score2":"31","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"7","result4":"محجوبة","score5":"6","result5":"محجوبة","score6":"19","result6":"محجوبة"},{"name":"مينا عاطف خلف","id":"26021","code":"P5601","phone":"201224061139","status":"تمام","score1":"25","result1":"محجوبة","score2":"42","result2":"محجوبة","score3":"7","result3":"محجوبة","score4":"15","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"13","result6":"محجوبة"},{"name":"مكسيموس هانى إدوار","id":"26096","code":"P3527","phone":"201200264990","status":"لسة","score1":"17","result1":"محجوبة","score2":"25","result2":"محجوبة","score3":"20","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"21","result5":"محجوبة","score6":"10","result6":"محجوبة"},{"name":"اندرو عبدالمسيح غطاس","id":"25004","code":"P5193","phone":"201275226767","status":"تمام","score1":"7","result1":"محجوبة","score2":"6","result2":"محجوبة","score3":"26","result3":"محجوبة","score4":"13","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"10","result6":"محجوبة"},{"name":"يوسف ماهر يوسف","id":"26043","code":"P4916","phone":"201221682073","status":"تمام","score1":"7","result1":"محجوبة","score2":"25","result2":"محجوبة","score3":"7","result3":"محجوبة","score4":"17","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"27","result6":"راسب"},{"name":"ايريني عماد فارس","id":"26092","code":"P4358","phone":"201140371250","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"12","result3":"محجوبة","score4":"16","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"25","result6":"محجوبة"},{"name":"مريم اشرف فهيم","id":"26092","code":"P9182","phone":"201272704389","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"12","result3":"محجوبة","score4":"16","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"25","result6":"محجوبة"},{"name":"كيرلس عادل نظيم","id":"26098","code":"P2193","phone":"201270785961","status":"لسة","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"32","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"30","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"ماريت مدحت أمين","id":"26081","code":"P5798","phone":"201221896459","status":"تمام","score1":"26","result1":"محجوبة","score2":"38","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"9","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"8","result6":"محجوبة"},{"name":"اوديت بلبل اسكندر","id":"26030","code":"P4187","phone":"201204514234","status":"تمام","score1":"25","result1":"محجوبة","score2":"31","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"16","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"7","result6":"محجوبة"},{"name":"يوسي سرور سعيد","id":"25070","code":"P8462","phone":"201221605479","status":"تمام","score1":"39","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"6","result3":"محجوبة","score4":"3","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"18","result6":"محجوبة"},{"name":"دميانة عماد وصفى","id":"25020","code":"P7430","phone":"201202661497","status":"تمام","score1":"34","result1":"محجوبة","score2":"18","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"13","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"12","result6":"محجوبة"},{"name":"ملاك صبحى راشد","id":"26083","code":"P2670","phone":"201279120029","status":"لسة","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"8","result3":"محجوبة","score4":"18","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"20","result6":"راسب"},{"name":"مارينا ميلاد رفعت","id":"26088","code":"P5039","phone":"201282517516","status":"تمام","score1":"25","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"4","result3":"محجوبة","score4":"6","result4":"محجوبة","score5":"6","result5":"محجوبة","score6":"18","result6":"محجوبة"},{"name":"مريم هاني فتحي","id":"26099","code":"P5740","phone":"201221726771","status":"لسة","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"34","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"18","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"كيرلس رضا صالح","id":"26047","code":"P3408","phone":"201284735302","status":"تمام","score1":"22","result1":"محجوبة","score2":"21","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"20","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"5","result6":"محجوبة"},{"name":"مريم رمزي زكريا","id":"26003","code":"P6158","phone":"201220773306","status":"لسة","score1":"18","result1":"محجوبة","score2":"30","result2":"راسب","score3":"0","result3":"محجوبة","score4":"3","result4":"محجوبة","score5":"14","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"دميانة لبيب نبيه","id":"25158","code":"P6572","phone":"201227038533","status":"تمام","score1":"35","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"3","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"5","result6":"محجوبة"},{"name":"مريم نبيل مارس","id":"26044","code":"P6207","phone":"201288978097","status":"تمام","score1":"34","result1":"محجوبة","score2":"18","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"5","result6":"محجوبة"},{"name":"مادونا عماد ابراهيم","id":"26052","code":"P7730","phone":"201200935092","status":"تمام","score1":"27","result1":"راسب","score2":"28","result2":"راسب","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"توماس حنا فتحي","id":"25080","code":"P3569","phone":"201280259945","status":"تمام","score1":"7","result1":"محجوبة","score2":"35","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"5","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"8","result6":"محجوبة"},{"name":"جونير حنا رشدى","id":"25151","code":"#REF!","phone":"201221252307","status":"تمام","score1":"23","result1":"محجوبة","score2":"27","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"جومانا ميلاد عزمي","id":"26053","code":"P6143","phone":"201283487038","status":"تمام","score1":"24","result1":"محجوبة","score2":"19","result2":"راسب","score3":"0","result3":"محجوبة","score4":"4","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"4","result6":"محجوبة"},{"name":"مارثا بولس صديق","id":"25174","code":"P3725","phone":"201200789854","status":"تمام","score1":"18","result1":"محجوبة","score2":"20","result2":"راسب","score3":"0","result3":"محجوبة","score4":"6","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"4","result6":"محجوبة"},{"name":"چوفاني وائل عريان","id":"26077","code":"P7482","phone":"201274468541","status":"لسة","score1":"16","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"3","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"جورج حازم ثابت","id":"26097","code":"P8046","phone":"201222326885","status":"لسة","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"6","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"12","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"جونير بشري عبده","id":"26086","code":"P7392","phone":"201225627376","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"6","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"4","result6":"محجوبة"},{"name":"ايلاريا روماني شفيق","id":"25076","code":"P5206","phone":"201143544628","status":"تمام","score1":"16","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"ايريني عماد شهيد","id":"26087","code":"P1684","phone":"201229039086","status":"تمام","score1":"7","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"سعد نبيل سعد","id":"26027","code":"P7819","phone":"201203799203","status":"تمام","score1":"15","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"سارة اشرف سمير","id":"26010","code":"P5173","phone":"201223641401","status":"تمام","score1":"7","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"يوستينا هانى البير","id":"26022","code":"P2756","phone":"201220046627","status":"تمام","score1":"7","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"مهرائيل رفعت لبيب","id":"26050","code":"P5896","phone":"201115212208","status":"تمام","score1":"7","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"مايكل شنوده لمعي","id":"26078","code":"P1549","phone":"201288017363","status":"لسة","score1":"7","result1":"محجوبة","score2":"20","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"مادونا وليد سمير","id":"26079","code":"P9863","phone":"201288084422","status":"لسة","score1":"7","result1":"محجوبة","score2":"19","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"كلارا وائل عريان","id":"26064","code":"#REF!","phone":"201279136243","status":"تمام","score1":"7","result1":"محجوبة","score2":"19","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"بولس ممدوح فوزي","id":"25008","code":"P2409","phone":"201229955175","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"دميانة أسامة لويس","id":"25019","code":"P8029","phone":"201276968986","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"ماريا مجدي بشري","id":"25040","code":"P9042","phone":"201206697634","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"مارينا سامح ملاك","id":"25043","code":"P4170","phone":"201272476160","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"يوسف وسام ابراهيم","id":"25069","code":"P1039","phone":"201288224301","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"توماس عزت نعيم","id":"25081","code":"P4082","phone":"201289586769","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"ساندرا نصر فهمي","id":"25090","code":"P3127","phone":"201225973567","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"روماني عصام عبدالله","id":"25136","code":"P5901","phone":"201275286458","status":"تمام","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"شنودة سمير يسرى","id":"26076","code":"P4037","phone":"201289916936","status":"لسة","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"},{"name":"مارينا سعد عبد التواب","id":"26095","code":"P1285","phone":"201279934057","status":"لسة","score1":"7","result1":"محجوبة","score2":"11","result2":"محجوبة","score3":"0","result3":"محجوبة","score4":"0","result4":"محجوبة","score5":"0","result5":"محجوبة","score6":"0","result6":"محجوبة"}];
+
+
+
+function hideAll() {
+  document.getElementById('errorMsg').style.display = 'none';
+  document.getElementById('warningMsg').style.display = 'none';
+  document.getElementById('studentResult').style.display = 'none';
+  document.getElementById('gradesSection').style.display = 'none';
+}
+
+function searchStudent() {
+  hideAll();
+
+  const idVal = document.getElementById('studentId').value.trim();
+  const codeVal = document.getElementById('studentCode').value.trim();
+
+  if (!idVal || !codeVal) {
+    const err = document.getElementById('errorMsg');
+    err.textContent = '⚠ الرجاء إدخال الكود وكلمة السر';
+    err.style.display = 'block';
+    return;
+  }
+
+  const id = Number(idVal);
+  let student;
+
+  if (codeVal === 'OOOO') {
+    student = students.find(s => s.id == id);
+  } else {
+    student = students.find(s => s.id == id && s.code == codeVal);
+  }
+
+  if (!student || typeof student.name !== 'string' || student.name === 'الإسم') {
+    const err = document.getElementById('errorMsg');
+    err.textContent = '⚠ لم يتم العثور على الطالب، تأكد من الكود وكلمة السر';
+    err.style.display = 'block';
+    return;
+  }
+
+  // Show student card
+  document.getElementById('studentName').textContent = student.name;
+  document.getElementById('studentIdDisplay').textContent = 'كود: ' + student.id;
+  document.getElementById('studentResult').style.display = 'block';
+
+  // Check تذكية
+  if (student.status !== 'تمام' && codeVal !== 'OOOO') {
+    document.getElementById('warningMsg').style.display = 'block';
+    return;
+  }
+
+  // Build grades
+  const subjects = [
+    { n: 'تربوى', s: student.score1, r: student.result1 },
+    { n: 'طقس جزء أول', s: student.score2, r: student.result2 },
+    { n: 'لاهوت روحى', s: student.score3, r: student.result3 },
+    { n: 'لاهوت مقارن جزء أول', s: student.score4, r: student.result4 },
+    { n: 'عقيدة جزء أول', s: student.score5, r: student.result5 },
+    { n: 'تاريخ كنيسة', s: student.score6, r: student.result6 },
+  ];
+
+  const list = document.getElementById('gradesList');
+  list.innerHTML = '';
+
+  subjects.forEach((sub, i) => {
+    let cls = '';
+    if (sub.r === 'ناجح') cls = 'pass';
+    else if (sub.r === 'راسب') cls = 'fail';
+    else cls = 'hidden';
+
+    const card = document.createElement('div');
+    card.className = 'grade-card ' + cls;
+    card.style.animationDelay = (i * 0.06) + 's';
+    card.innerHTML = `
+      <span class="subject-name">${sub.n}</span>
+      <span class="score-badge">${sub.s}</span>
+      <span class="status-pill">${sub.r}</span>
+    `;
+    list.appendChild(card);
+  });
+
+  document.getElementById('gradesSection').style.display = 'block';
+
+
+ 
+  // Show note
+  const noteBox = document.getElementById('noteBox');
+  noteBox.style.display = 'block';
+  document.getElementById('noteText').innerHTML = 
+    'لمعرفة سبب حجب بعض المواد والحلول المتاحة سيكون من خلال جلسة فردية مع اللجنة يوم الجمعة 13 مارس الساعة 11 امام مكتب أبونا شينوتى حالة راسب تعني سيتم امتحان هذه المادة فى الدور الثاني';
+ 
+  // Scroll to result
+  setTimeout(() => {
+    document.getElementById('studentResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// Enter key support
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') searchStudent();
+});
+
+</script>
+</body>
+</html>
